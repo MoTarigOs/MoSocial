@@ -1,0 +1,180 @@
+*{
+    margin: 0;
+    padding: 0;    
+    box-sizing: border-box;
+}
+
+.SideBar{
+    width: 350px;
+    height: 100%;
+    position: relative;
+    padding: 24px 12px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    z-index: 1;
+}
+
+.SideBar ul{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 1;
+}
+
+.SideBar li{
+    width: 100%;
+    height: fit-content;
+}
+
+.SideBar li .sideNavProfile{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+    box-sizing: border-box;
+    padding: 0 8px;
+}
+
+.SideBar li .sideNavProfile .profileImageSideNav{
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.SideBar li .sideNavProfile div{
+    max-width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 2px;
+    margin-right: auto;
+}
+
+.SideBar li .sideNavProfile div h1{
+    font-size: 0.975rem;
+    cursor: pointer;
+}
+
+.SideBar .logoutDiv{
+    width: 100%;
+    height: fit-content;
+
+    & svg{
+        transform: rotate(180deg);
+    }
+}
+
+.SideBar li .sideNavProfile div a {
+
+    color: black;
+    text-decoration: none;
+
+    & p{
+    font-size: 0.75rem;
+    cursor: pointer;
+    }
+
+    &:active{
+        color: black;
+    }
+
+    & p:hover{
+        color: rgba(0, 0, 0, 0.775);
+    }
+
+}
+
+.SideBar li .sideNavProfile .share_icon{
+    width: 32px;
+    height: 32px;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+.notAuthedATag{
+    width: 100%;
+    cursor: pointer;
+
+    & .notAuthedSection{
+        width: fit-content;
+        display: flex;
+        align-items: center;
+        padding: 8px 16px;
+        background: transparent;
+        border: 2px solid rgb(71, 71, 255);
+        border-radius: 25px;
+        gap: 8px;
+        color: rgb(71, 71, 255);
+        stroke: rgb(71, 71, 255);
+        transition: all 0.3s ease-out;
+        margin: 0;
+
+        & button{
+            width: fit-content;
+            color: inherit;    
+            cursor: pointer;
+        }
+    
+        & svg{
+            stroke: inherit;
+        }
+
+        &:hover{
+            background: rgb(71, 71, 255);
+            color: white;
+            stroke: white;
+            border-color: white;
+        }
+
+        &:active{
+            background: rgb(24, 24, 187);
+            color: white;
+            stroke: white;
+            border-color: white;
+        }
+
+    }
+
+    & .signPageSelected{
+        background: rgb(71, 71, 255);
+        color: white;
+        stroke: white;
+        border-color: white;
+    }
+
+}
+
+@media screen and (max-width: 1100px){
+    .SideBar{
+        width: fit-content;
+        height: fit-content;
+        padding: 24px 12px;
+    }
+    
+    .SideBar ul{
+        width: fit-content;
+        height: fit-content;
+        gap: 8px;
+    }
+    
+    .SideBar li{
+        width: fit-content;
+        height: fit-content;
+    }
+}
+
+@media screen and (max-width: 960px){
+    .SideBar{
+        width: 0;
+        padding: 0;
+        margin: 0;
+        overflow: hidden;
+        background: red;
+    }
+}

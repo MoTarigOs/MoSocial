@@ -1,0 +1,31 @@
+.CatagoryCard{
+    min-width: 160px;
+    height: 160px;
+    padding: 24px;
+    color: white;
+    border-radius: 4px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s ease-in;
+
+    & ::after{
+        content: '';
+        position: absolute;
+        bottom: 2%;
+        right: 3%;
+        height: 70px;
+        width: 70px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.174);
+    }
+}
+
+.CatagoryCard:hover{
+    opacity: 0.85;
+    transition: all 0.3s ease-in;
+}
+
+.CatagoryCard p{
+    font-size: 1.25rem;
+    font-weight: 500;
+}

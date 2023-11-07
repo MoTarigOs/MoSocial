@@ -1,0 +1,29 @@
+.Skill{
+    width: 100%;
+    max-width: 100%;
+    padding: 8px 12px;
+    gap: 0;
+    height: fit-content;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+
+    & div{              
+        height: 4px;
+        width: 100%;
+        max-width: 800px;
+    }
+
+    & strong{
+        width: 100%;
+        max-width: 70px;
+        min-width: 70px;
+        font-size: 1rem;
+        font-weight: 500;
+        margin-right: 8px;
+        color: grey;
+        word-break: break-all;
+    }
+
+}

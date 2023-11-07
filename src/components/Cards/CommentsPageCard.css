@@ -1,0 +1,149 @@
+*{
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+.CommentPageCardLi{
+    width: 100%;
+    height: fit-content;
+    box-shadow: 0 4px 16px rgba(185, 185, 185, 0.777);
+    margin: 0 ;
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.CommentPageCardLi .CommentsPageCard{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    padding: 32px;
+    background: white;
+    gap: 16px;
+}
+
+.CommentPageCardLi .CommentsPageCard .comments_page_postDiv{
+    display: flex;
+    gap: 12px;
+    padding: 16px;
+    background: rgb(236, 236, 236);
+}
+
+.CommentPageCardLi .CommentsPageCard .comments_page_postDiv img{
+    width: 72px;
+    height: 72px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+.CommentPageCardLi .CommentsPageCard .comments_page_postDiv p{
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.CommentPageCardLi .CommentsPageCard .comments_page_postDiv h5{
+    font-weight: 400;
+    color: rgba(84, 84, 84, 0.852);
+}
+
+.CommentsPageCard .commentsPageCreator{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: black;
+    position: relative;
+}
+
+.CommentsPageCard .commentsPageCreator::before{
+    content: '';
+    position: absolute;
+    width: 22px;
+    height: 30px;
+    top: 34px;
+    left: 8px;
+    border-bottom-left-radius: 6px;
+    background: rgba(197, 197, 197, 0.789);
+    z-index: 0;
+}
+
+.CommentsPageCard .commentsPageCreator::after{
+    content: '';
+    position: absolute;
+    width: 80px;
+    height: 30px;
+    top: 28px;
+    left: 14px;
+    border-bottom-left-radius: 6px;
+    background: rgb(255, 255, 255);
+    z-index: 0;
+}
+
+.CommentsPageCard .commentsPageCreator img{
+    width: 24px;
+    height: 24px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.CommentsPageCard .commentsPageCreator h1{
+    font-size: 1.45rem;
+    font-weight: 400;
+    cursor: pointer;
+    color: black;
+    margin-right: auto;
+}
+
+.CommentsPageCard p{
+    max-width: 100%;
+    margin-left: 36px;
+    padding: 12px;
+    border-radius: 4px;
+    word-break: break-all;
+    background: rgba(197, 197, 197, 0.589);
+    cursor: pointer;
+    transition: all 0.25s ease-in;
+    z-index: 1;
+}
+
+.CommentsPageCard p:hover{
+    background: rgba(197, 197, 197, 0.389);
+    transition: all 0.25s ease-out;
+}
+
+
+
+@media screen and (max-width: 680px){
+    .CommentPageCardLi .CommentsPageCard .comments_page_postDiv p{
+        font-size: 0.9rem;
+    }
+    
+    .CommentPageCardLi .CommentsPageCard .comments_page_postDiv h5{
+        font-size: 0.7rem;
+    }
+
+    .CommentPageCardLi .CommentsPageCard .comments_page_postDiv img{
+        width: 64px;
+        height: 64px;
+    }
+
+    .CommentsPageCard .commentsPageCreator h1{
+        font-size: 1.45rem;
+    }
+
+    .CommentsPageCard p{
+        font-size: 0.8rem;
+    }
+    
+    .CommentPageCardLi .CommentsPageCard{
+        padding: 12px;
+    }
+    
+    .CommentPageCardLi .CommentsPageCard .comments_page_postDiv{
+        gap: 8px;
+        padding: 12px;
+    }
+}

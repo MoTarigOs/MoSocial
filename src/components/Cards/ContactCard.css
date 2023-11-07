@@ -1,0 +1,146 @@
+.ContactCardLi{
+    width: 100%;
+    height: fit-content;
+    display: flex;
+    padding: 16px 24px;
+    background: white;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 8px;
+    gap: 12px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+    position: relative;
+
+    & .deleteContact{
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: none;
+
+        & .svgDiv{
+            width: fit-content;
+            height: fit-content;
+
+            & svg{
+                width: 20px;
+                height: 20px;
+                margin-left: 8px;
+                margin-top: 8px;
+    
+                & path{
+                    fill: rgba(255, 123, 123, 0.651);
+                }
+    
+                &:hover{
+                    & path{
+                        fill: red;
+                    }
+                }
+    
+                &:active{
+                    & path{
+                        fill: rgb(162, 30, 30);
+                    }
+                }
+                
+            }
+        }
+
+        & .alert{
+            width: 100%;
+            height: 100%;
+            background: white;
+            z-index: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: end;
+            align-items: center;
+            gap: 6px;
+
+            & p{
+                font-size: 1.15rem;
+                font-weight: 600;
+                margin-top: 50%;
+                color: grey;
+            }
+    
+            & button{
+                background: transparent;
+                border: none;
+                color: rgb(255, 88, 88);
+                font-size: 1.25rem;
+                font-weight: 600;
+                cursor: pointer;
+                margin-bottom: 24px;
+
+                &:hover{
+                    color: red;
+                    font-weight: 700;
+                }
+            }
+        }
+    }
+
+
+    & img{
+        width: 72px;
+        height: 72px;
+        object-fit: cover;
+        border-radius:50%;
+    }
+
+    & div{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        & h2{
+            font-size: 1.85rem;
+        }
+
+        & p{
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 4px;
+            color: grey;
+        }
+    }
+
+    & h4{
+        margin: 0;
+        padding: 5px 8px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgb(50, 84, 251);
+        color: white;
+        border-radius: 8px;
+    }
+
+    &:hover{
+        background: rgb(230, 230, 230);
+        transition: all 0.3s ease-in;
+
+        & .deleteContact{
+            display: block;
+
+            & .alert{
+                animation-name: animateDeleteAlert;
+                animation-duration: 0.3s;
+                animation-timing-function: ease-in;
+            }
+        }
+    }
+}
+
+@keyframes animateDeleteAlert{
+    0%{transform: translateX(-100%)}
+    100%{transform: translateX(0)}
+}

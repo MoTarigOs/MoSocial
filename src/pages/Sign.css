@@ -1,0 +1,347 @@
+*{
+    box-sizing: border-box;
+}
+
+:root{
+    --lightGreyColor: #d6d6d6;
+}
+
+.Sign{
+    width: 100%;
+    height: 100vh;
+    padding: 32px 0 32px 32px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 32px;
+    z-index: 1;
+}
+
+.Sign .SignUp{
+    max-width: 450px;
+    min-width: 45%;
+    height: 100vh;
+    padding: 32px 0;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.Sign .SignUp h2{
+    margin-bottom: 24px;
+}
+
+.Sign .SignUp form{
+    display: flex;
+    flex-direction: column;
+
+    & button{
+        padding: 16px 0;
+        background: #2f32ff;
+        color: white;
+        font-size: 1.25rem;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+        margin-top: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+    }
+
+    & button:hover{
+        background: #2f32ffd3;
+        transition: all 0.3s ease-in;
+    }
+}
+
+.Sign .SignUp form label{
+    font-size: .88rem;
+    font-weight: 750;
+    color: rgb(43, 43, 43);
+    margin-bottom: 8px;
+    margin-right: 4px;
+}
+
+.Sign .SignUp form input{
+    padding: 16px;
+    border-radius: 8px;
+    border: 2px solid var(--lightGreyColor);
+    box-shadow: none;
+    outline: none;
+    margin-bottom: 24px;
+    font-size: 1rem;
+}
+
+.Sign .SignUp .captcha{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    flex-wrap: wrap;
+    & img{
+        scale: 0.75;
+        margin: 0;
+    }
+    & input{
+        margin: 0;
+    }
+}
+
+.Sign .SignUp .captcha div{
+    display: flex;
+    flex-direction: column;
+}
+
+.Sign .SignUp .checkbox_terms{
+    padding: 16px 0;
+    display: flex;
+    align-items: center;
+    margin-top: 8px;
+    gap: 8px;
+
+    & input[type=checkbox]{
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    & label{
+        font-weight: 400;
+        font-size: 1.1rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    & span{
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+    }
+}
+
+
+
+
+
+.Sign .SignIn{
+    max-width: 450px;
+    min-width: 45%;
+    height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding: 32px 0;
+}
+
+.Sign .SignIn h2{
+    margin-bottom: 24px;
+}
+
+.Sign .SignIn form{
+    display: flex;
+    flex-direction: column;
+
+    & button{
+        padding: 16px 0;
+        background: #2f32ff;
+        color: white;
+        font-size: 1.25rem;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+        margin-top: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+    }
+
+    & button:hover{
+        background: #2f32ffd3;
+        transition: all 0.3s ease-in;
+    }
+}
+
+.Sign .SignIn form label{
+    font-size: .88rem;
+    font-weight: 750;
+    color: rgb(43, 43, 43);
+    margin-bottom: 8px;
+    margin-right: 4px;
+}
+
+.Sign .SignIn form input{
+    padding: 16px;
+    border-radius: 8px;
+    border: 2px solid var(--lightGreyColor);
+    box-shadow: none;
+    outline: none;
+    margin-bottom: 24px;
+    font-size: 1rem;
+}
+
+.Sign .SignIn .checkbox_terms{
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+
+    & input[type=checkbox]{
+        width: 24px;
+        height: 24px;
+        padding: 0;
+        margin: 0;
+        cursor: pointer;
+    }
+
+    & label{
+        font-weight: 400;
+        font-size: 1.1rem;
+        margin: 0;
+        padding: 0;
+    }
+
+    & span{
+        text-decoration: underline;
+        cursor: pointer;
+        color: black;
+    }
+}
+
+.Sign .toggleButtonDiv{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.Sign .toggleButtonDiv p{
+    width: 70px;
+    text-align: center;
+    margin-top: 16px;
+    color: #2f32ff;
+    position: relative;
+    cursor: pointer;
+
+    &:hover{
+        color: #1417cadc;
+    }
+}
+
+.Sign .toggleButtonDiv p::before{
+    content: '';
+    position: absolute;
+    width: 3000%;
+    height: 2px;
+    background: var(--lightGreyColor);
+    right: 100%;
+    top: calc(50% - 1px);
+    cursor: default;
+}
+
+.Sign .toggleButtonDiv p::after{
+    content: '';
+    position: absolute;
+    width: 3000%;
+    height: 2px;
+    background: var(--lightGreyColor);
+    left: 100%;
+    top: calc(50% - 1px);
+    cursor: default;
+}
+
+
+.Sign .signPageLander{
+    width: 100%;
+    height: 100vh;
+    padding: 0 32px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 32px;
+    position: relative;
+    background: yellowgreen;
+}
+
+.Sign .signPageLander::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: url('../Assets/images/landing_bg.jpg') center center/cover no-repeat;
+    z-index: 0;
+    transform: rotateY(180deg);
+    opacity: 0.5;
+}
+
+.Sign .signPageLander::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(90deg, rgb(10, 19, 61) 0%, rgb(16, 28, 43) 35%, rgb(7, 23, 49) 62%, rgb(24, 26, 36) 79%, rgb(17, 17, 29) 100%);
+    opacity: 0.75;
+    z-index: 0;
+}
+
+.Sign .signPageLander .SignWith{
+    width: 100%;
+    max-width: 230px;
+    height: fit-content;
+    padding: 10px 24px;
+    border: 2px solid white;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    gap: 12px;
+    z-index: 1;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+
+    & label{
+        cursor: pointer;
+    }
+}
+
+.Sign .signPageLander .SignWith:hover{
+    background: white;
+    color: black;
+    transition: all 0.3s ease-in;
+}
+
+.Sign .signPageLander .changeSVGcolor:hover{
+    & path{
+        stroke: black;
+        fill: transparent;
+    }
+}
+
+
+.Sign .SignUp::-webkit-scrollbar, .Sign .SignIn::-webkit-scrollbar{
+    display: none;
+}
+
+
+@media screen and (max-width: 680px){
+    .Sign{
+        justify-content: center;
+        padding: 0 12px;
+        flex-direction: column;
+    }
+
+    .Sign .SignIn{
+        width: 100%;
+    }
+
+    ::-webkit-scrollbar{
+        display: none;
+    }
+
+    .Sign .signPageLander{
+        display: none;
+    }
+}

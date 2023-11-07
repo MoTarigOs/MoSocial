@@ -1,0 +1,22 @@
+.HeroTags{
+    width: 100%;
+    padding: 24px 0;
+}
+
+.HeroTags ul{
+    width: fit-content;
+    display: flex;
+    gap: 12px;
+    list-style: none;
+}
+
+.HeroTags ul li{
+    background: rgb(237, 237, 237);
+    padding: 10px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.HeroTags ul li:hover{
+    background: rgb(230, 230, 230);
+}

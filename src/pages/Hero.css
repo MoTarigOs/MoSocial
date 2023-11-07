@@ -1,0 +1,179 @@
+.HeroContainer{
+    width: 100%;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    overflow-y: auto;
+    position: relative;
+    z-index: 1;
+}
+
+.HeroContainer .HeroHeader{
+    width: 100%;
+    height: fit-content;
+    padding: 32px 64px 12px 64px;
+
+    & .selectMenuFilter{
+        width: fit-content;
+        text-align: start;
+        font-size: 0.88rem;
+        padding: 8px 8px;
+        background: orange;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+    }
+
+    & .selectMenuFilter:hover{
+        background: rgb(255, 184, 52);
+        transition: all 0.3s ease-in;
+    }
+
+    & .selectMenuFilter:active{
+        background: rgb(224, 147, 2);
+        transition: all 0.3s ease-in;
+    }
+
+    & .selectMenuFilter:focus{
+        outline: none;
+        background: rgb(245, 163, 0);
+        border-radius: 2px;
+    }
+}
+
+.HeroContainer::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    transform: rotateY(180deg);
+    opacity: 0.5;
+}
+
+.HeroContainer::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    opacity: 0.9;
+    z-index: -1;
+}
+
+.HeroContainer .HeroHeader .HeroSearchForm{
+    width: 100%;
+    height: fit-content;
+    border-bottom: 2px solid black;
+    padding: 0 12px 8px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    & svg{
+        cursor: pointer;
+    }
+    & svg:hover{
+        & g{
+            stroke: rgb(124, 124, 124);
+        }
+    }
+    & button{
+        margin-left: auto;
+    }
+}
+
+.HeroContainer .HeroHeader .HeroSearchForm input[type=text]{
+    width: 100%;
+    height: 100%;
+    border: none;
+    font-size: 1.25rem;
+    padding-left: 8px;
+    box-sizing: border-box;
+}
+
+.HeroContainer .HeroHeader .HeroSearchForm input[type=text]:focus{
+    outline: none;
+}
+
+.HeroContainer .HeroHeader .searchForMobile svg{
+    width: 32px;
+    height: 32px;
+    & path{
+        fill: white;
+        stroke: white;
+    }
+}
+
+.HeroContainer .Hero{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    position: relative;
+    background: rgb(248, 248, 248);
+    padding: 64px;
+    overflow-y: auto;
+}
+
+.HeroContainer .Hero .postsUL{
+    height: fit-content;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    gap: 32px;
+}
+
+.HeroContainer .Hero .morePostsButton{
+    width: 100%;
+    text-align: center;
+    background: transparent;
+    border: none;
+    color: rgb(44, 44, 44);
+    font-size: 1.25rem;
+    margin-top: 24px;
+}
+
+@media screen and (max-width: 1130px){
+    .HeroContainer .Hero{
+        padding: 32px;
+    }
+}
+
+@media screen and (max-width: 960px){
+    .HeroContainer .HeroHeader{
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.267);
+        z-index: 2;
+    }
+}
+
+@media screen and (max-width: 680px){
+    .HeroContainer .HeroHeader{
+        width: 100%;
+        height: 64px;
+        display: flex;
+        align-items: end;
+        padding: 12px 24px;
+    }
+
+    .HeroContainer::before{
+        background: url('../Assets/images/landing_bg.jpg') center center/cover no-repeat;
+    }
+
+    .HeroContainer::after{    
+        background: linear-gradient(90deg, rgb(38, 72, 244) 0%, rgba(20,111,219,1) 35%, rgba(33,91,184,1) 62%, rgba(62,91,215,1) 79%, rgb(56, 66, 245) 100%);
+    }
+}
+
+.Hero::-webkit-scrollbar, .HeroContainer::-webkit-scrollbar, .postsUL::-webkit-scrollbar{
+    display: none;
+}

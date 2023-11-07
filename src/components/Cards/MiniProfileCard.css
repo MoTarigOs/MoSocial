@@ -1,0 +1,37 @@
+.MiniProfileCard{
+    min-width: 220px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 1px 2px 12px rgba(0, 0, 0, 0.308);
+    cursor: pointer;
+    transition: all 0.15s ease-out;
+}
+
+.MiniProfileCard img{
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 24px;
+    transition: all 0.3s ease-out;
+}
+
+.MiniProfileCard:hover{
+    box-shadow: 1px 2px 12px rgba(0, 0, 0, 0.521);
+    transition: all 0.3s ease-in;
+}
+
+.MiniProfileCard h5{
+    font-size: 2rem;
+    margin-bottom: 4px;
+}
+
+.MiniProfileCard p{
+    font-size: 0.9rem;
+}
