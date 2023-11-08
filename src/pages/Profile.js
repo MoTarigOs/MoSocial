@@ -15,6 +15,7 @@ import Comments from '../components/Comments/Comments';
 import axios from 'axios';
 import B2 from 'backblaze-b2';
 import * as buffer from 'buffer';
+import CryptoJS from 'crypto-js';
 
 const Profile = ({
   setIsChat, isChat, setIsSelected
@@ -88,46 +89,63 @@ const Profile = ({
       if(optimisedImage?.size > 300000)
         optimisedImage = await handleImage(choosenImage, 0.3);
 
-      const BACKBLAZE_KEY_ID = res.dt.BACKBLAZE_KEY_ID;
-      const BACKBLAZE_APP_KEY = res.dt.BACKBLAZE_APP_KEY;
-      const BACKBLAZE_BUCKET_ID = res.dt.BACKBLAZE_BUCKET_ID;
+      const url = res.dt.uploadUrl;
+      const authToken = res.dt.authToken;
+      const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(optimisedImage));
 
-      function file2Buffer (file) {
-        return new Promise(function (resolve, reject) {
-          const reader = new FileReader()
-          const readFile = function(event) {
-            const buffer = reader.result
-            resolve(buffer)
-          }
+      const body = {
+        optimisedImage
+      };
+
+      const headers = {
+        Authorization: authToken,
+        "X-Bz-File-Name": res.dt.picName,
+        "Content-Length": optimisedImage.size,
+        "X-Bz-Content-Sha1": hash,
+        "X-Bz-Info-Author": "unknown",
+        'Access-Control-Allow-Credentials': true
+      };
+
+      const uploadPicRes = await axios.post(url, body, headers);
+
+      console.log("Upload res: ", uploadPicRes);
+
+      // function file2Buffer (file) {
+      //   return new Promise(function (resolve, reject) {
+      //     const reader = new FileReader()
+      //     const readFile = function(event) {
+      //       const buffer = reader.result
+      //       resolve(buffer)
+      //     }
       
-          reader.addEventListener('load', readFile)
-          reader.readAsArrayBuffer(file)
-        })
-      }
+      //     reader.addEventListener('load', readFile)
+      //     reader.readAsArrayBuffer(file)
+      //   })
+      // }
 
-      console.log("my image", await file2Buffer(optimisedImage));
+      // console.log("my image", await file2Buffer(optimisedImage));
 
-      try {
-        const b2 = new B2({
-          applicationKeyId: BACKBLAZE_KEY_ID,
-          applicationKey: BACKBLAZE_APP_KEY,
-        });  
-        const { data: authData } = await b2.authorize();
-        console.log("b2 authentication: ", authData);
-        const { data: uploadData } = await b2.getUploadUrl({
-            bucketId: BACKBLAZE_BUCKET_ID,
-        });
-        const { data } = await b2.uploadFile({
-          uploadUrl: uploadData.uploadUrl,
-          uploadAuthToken: uploadData.authorizationToken,
-          data: await file2Buffer(optimisedImage),
-          fileName: res.dt.picName,
-          mime: "image/jpeg"
-        });
-        console.log("b2 picture uploaded successfully!");
-      } catch(err){
-        console.log("error uploading pic", err.message);
-      }
+      // try {
+      //   const b2 = new B2({
+      //     applicationKeyId: BACKBLAZE_KEY_ID,
+      //     applicationKey: BACKBLAZE_APP_KEY,
+      //   });  
+      //   const { data: authData } = await b2.authorize();
+      //   console.log("b2 authentication: ", authData);
+      //   const { data: uploadData } = await b2.getUploadUrl({
+      //       bucketId: BACKBLAZE_BUCKET_ID,
+      //   });
+      //   const { data } = await b2.uploadFile({
+      //     uploadUrl: uploadData.uploadUrl,
+      //     uploadAuthToken: uploadData.authorizationToken,
+      //     data: await file2Buffer(optimisedImage),
+      //     fileName: res.dt.picName,
+      //     mime: "image/jpeg"
+      //   });
+      //   console.log("b2 picture uploaded successfully!");
+      // } catch(err){
+      //   console.log("error uploading pic", err.message);
+      // }
 
       // console.log("image file: ", optimisedImage);
       // const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(optimisedImage));
