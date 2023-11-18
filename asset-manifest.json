@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/mosocial/static/css/main.95f5ab19.css",
-    "main.js": "/mosocial/static/js/main.a86a5aee.js",
+    "main.js": "/mosocial/static/js/main.ee9e6e25.js",
     "static/media/bg.jpg": "/mosocial/static/media/bg.46b759c872375b17990c.jpg",
     "static/media/landing_bg.jpg": "/mosocial/static/media/landing_bg.411f247c604ce801cc48.jpg",
     "static/media/chatgpt_image.jpg": "/mosocial/static/media/chatgpt_image.430ff3b8487afd3280ec.jpg",
@@ -14,10 +14,10 @@
     "static/media/create_icon.svg": "/mosocial/static/media/create_icon.d1a9981237fc7ccf3bdfb4858d2b829e.svg",
     "static/media/arrow.svg": "/mosocial/static/media/arrow.3bec21ef72d75ff386fe0b5b9d7a2c13.svg",
     "main.95f5ab19.css.map": "/mosocial/static/css/main.95f5ab19.css.map",
-    "main.a86a5aee.js.map": "/mosocial/static/js/main.a86a5aee.js.map"
+    "main.ee9e6e25.js.map": "/mosocial/static/js/main.ee9e6e25.js.map"
   },
   "entrypoints": [
     "static/css/main.95f5ab19.css",
-    "static/js/main.a86a5aee.js"
+    "static/js/main.ee9e6e25.js"
   ]
 }
