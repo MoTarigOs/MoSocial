@@ -1,9 +1,10 @@
 {
   "files": {
-    "main.css": "/mosocial/static/css/main.95f5ab19.css",
-    "main.js": "/mosocial/static/js/main.e02b4e38.js",
+    "main.css": "/mosocial/static/css/main.d9559549.css",
+    "main.js": "/mosocial/static/js/main.75ff64ab.js",
     "static/media/bg.jpg": "/mosocial/static/media/bg.46b759c872375b17990c.jpg",
     "static/media/landing_bg.jpg": "/mosocial/static/media/landing_bg.411f247c604ce801cc48.jpg",
+    "static/media/transparentLoadingGif.gif": "/mosocial/static/media/transparentLoadingGif.b1e8dfa4383e41014698.gif",
     "static/media/chatgpt_image.jpg": "/mosocial/static/media/chatgpt_image.430ff3b8487afd3280ec.jpg",
     "static/media/loading_anim.gif": "/mosocial/static/media/loading_anim.20a21d3c5d14bc614403.gif",
     "static/media/ui_design_image.jpg": "/mosocial/static/media/ui_design_image.98e0a777b5af96b69f88.jpg",
@@ -13,11 +14,11 @@
     "static/media/share_massenger_icon.svg": "/mosocial/static/media/share_massenger_icon.34ad10bf745e63dda05333d4e4c9f21c.svg",
     "static/media/create_icon.svg": "/mosocial/static/media/create_icon.d1a9981237fc7ccf3bdfb4858d2b829e.svg",
     "static/media/arrow.svg": "/mosocial/static/media/arrow.3bec21ef72d75ff386fe0b5b9d7a2c13.svg",
-    "main.95f5ab19.css.map": "/mosocial/static/css/main.95f5ab19.css.map",
-    "main.e02b4e38.js.map": "/mosocial/static/js/main.e02b4e38.js.map"
+    "main.d9559549.css.map": "/mosocial/static/css/main.d9559549.css.map",
+    "main.75ff64ab.js.map": "/mosocial/static/js/main.75ff64ab.js.map"
   },
   "entrypoints": [
-    "static/css/main.95f5ab19.css",
-    "static/js/main.e02b4e38.js"
+    "static/css/main.d9559549.css",
+    "static/js/main.75ff64ab.js"
   ]
 }
