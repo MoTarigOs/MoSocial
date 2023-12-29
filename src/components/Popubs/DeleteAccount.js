@@ -103,7 +103,7 @@ const DeleteAccount = ({isDeleteAccount, setIsDeleteAccount}) => {
                         ))}
                     </ul>
 
-                    <ReCAPTCHA sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' ref={reCaptchaRef}/>
+                    <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} ref={reCaptchaRef}/>
             
                     <div className='buttons'>
                         <button onClick={() => setIsDeleteAccount(false)}>Cancel</button>

@@ -399,7 +399,7 @@ const Sign = () => {
           <input type='password' placeholder='confirm password' required onChange={(e) => handleValidation(e, "confirm")}></input>
 
           <ReCAPTCHA 
-            sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' //process.env.REACT_APP_SITE_KEY
+            sitekey={process.env.REACT_APP_SITE_KEY}
             ref={reCaptchaRef}
           />
 
@@ -462,7 +462,7 @@ const Sign = () => {
           }} onClick={() => setIsForgotPassword(true)}>Forgot Password ?</span></label>
           <input type='password' placeholder='password' required value={loginPassword} onChange={(e) => setLoginPassword(e.target.value)}></input>
 
-          <ReCAPTCHA sitekey='6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI' ref={reCaptchaRefLogin} /></>}
+          <ReCAPTCHA sitekey={process.env.REACT_APP_SITE_KEY} ref={reCaptchaRefLogin} /></>}
 
           {isForgotPassword && <>
 
