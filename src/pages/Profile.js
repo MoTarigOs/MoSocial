@@ -1,24 +1,22 @@
 import React, { useEffect, useRef, useState, useContext } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { DataContext } from '../DataContext';
 import './Profile.css';
-import profile_Image from '../Assets/images/idea_image.jpg';
 import choose_image_icon from '../Assets/icons/icons8-image-96.png';
 import Skill from '../components/SkillsSection/Skill';
 import HeroPostCard from '../components/Cards/HeroPostCard';
 import Svgs from '../Assets/icons/Svgs';
 import { Link } from 'react-router-dom';
 import CreatePostCard from '../components/Cards/CreatePostCard';
-import { isValidUsername, validateImageType, handleImage, setLikedPosts } from '../logic/helperMethods';
-import { updateProfileInfo, getProfile, getMyProfile, getMyProfileImage, getPostsByUserID, getUserInfo } from '../logic/api';
+import { isValidUsername, validateImageType, handleImage, setLikedPosts, getBadWords } from '../logic/helperMethods';
+import { updateProfileInfo, getProfile, getMyProfile, getMyProfileImage, getPostsByUserID, getUserInfo, profilePicFailed, moderate } from '../logic/api';
 import Comments from '../components/Comments/Comments';
-import axios from 'axios';
-import B2 from 'backblaze-b2';
 import * as buffer from 'buffer';
+import arrow from '../Assets/icons/arrow.svg';
 import CryptoJS from 'crypto-js';
 
 const Profile = ({
-  setIsChat, isChat, setIsSelected
+  setIsChat, isChat, setIsSelected, setIsReport, setIsShareAccount
  }) => {
 
   const [submitError, setSubmitError] = useState(false);
@@ -28,6 +26,10 @@ const Profile = ({
   const [isEditSmallInfo, setIsEditSmallInfo] = useState(false);
   const [isEditMoreInfo, setIsEditMoreInfo] = useState(false);
   const [isEditContacts, setIsEditContacts] = useState(false);
+  const [isCheckUrl, setIsCheckUrl] = useState(false);
+  const [checkUrl, setCheckUrl] = useState("");
+  const [isMobile, setIsMobile] = useState(false);
+  const [mobileContact, setMobileContact] = useState(false);
   const [runFetchOnce, setRunFetchOnce] = useState(false);
   const [choosenImageURL, setChoosenImageURL] = useState(null);
   const [otherOption, setOtherOption] = useState([]);
@@ -36,13 +38,13 @@ const Profile = ({
   const chooseFileRef = useRef();
   const { 
     userID, setUserID, isMyProfile, setIsMyProfile,
-    userUsername, setUserUsername,
-    navigateTo_userID, set_navigateTo_userUsername,
+    userUsername, setUserUsername, set_navigateTo_userUsername, set_navigateTo_userID,
     choosenImage, setChoosenImage, 
     SOCIAL_MEDIA_PLATFORMS, SET_SOCIAL_MEDIA_PLATFORMS,
-    profileImageName, setProfileImageName,
-    setParamsID
+    profileImageName, setProfileImageName, set_navigateTo_userProfilePic,
+    setReportType, setReportOnThisId, reportOnThisId, setRole, setPostID, 
   } = useContext(DataContext);
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState("");
   const [shortDesc, setShortDesc] = useState("");
@@ -54,7 +56,28 @@ const Profile = ({
   const [notifications, setNotification] = useState([]);
   const [fetchResult, setFetchResult] = useState("");
   const [limit, setLimit] = useState(10);
+  const [otherProfilePicName, setOtherProfilePicName] = useState("");
+  const [hisId, setHisId] = useState("");
+  const [profileId, setProfileId] = useState("");
   const limitGap = 5;
+
+  const handleFailedUpload = async() => {
+
+    try{
+
+      console.log("upload failed handling");
+
+      const res = await profilePicFailed();
+
+      console.log(res.dt);
+
+      console.log("Handled");
+
+    } catch(err){
+      console.log(err.message);
+    }
+
+  };
 
   const submit = async() => {
 
@@ -72,139 +95,80 @@ const Profile = ({
 
     if(mySocialMedia?.length > 25) return setSubmitError("too many Accounts! the max is 25");
 
+    const testUsernameForBadWords = getBadWords(username);
+    const testShortDescForBadWords = getBadWords(shortDesc);
+    const testMoreDescForBadWords = getBadWords(moreDetailsDesc);
+
+    if(testUsernameForBadWords.length > 0 || testShortDescForBadWords.length > 0 || testMoreDescForBadWords.length > 0) {
+      let er = "";
+      const testsArray = [...testUsernameForBadWords, ...testShortDescForBadWords, ...testMoreDescForBadWords];
+      for (let i = 0; i < testsArray.length; i++) {
+          if(i !== testsArray.length - 1){
+              er += `"${testsArray[i]}", `;
+          } else {
+              er += `"${testsArray[i]}"`;
+          }
+      }
+      setSubmitError("This is bad words: ", er);
+      return;
+    };
+
+    let skillsNames = "";
+    for (let i = 0; i < mySkills.length; i++) {
+      if(i !== mySkills.length - 1){
+        skillsNames += `"${mySkills[i].name}", `;
+      } else {
+        skillsNames += `"${mySkills[i].name}"`;
+      }
+    };
+
+    const testForSkillsBadWords = getBadWords(skillsNames);
+
+    if(testForSkillsBadWords.length > 0){
+      let er = "";
+      for (let i = 0; i < testForSkillsBadWords.length; i++) {
+          if(i !== testForSkillsBadWords.length - 1){
+              er += `"${testForSkillsBadWords[i]}", `;
+          } else {
+              er += `"${testForSkillsBadWords[i]}"`;
+          }
+      }
+      setSubmitError("This is bad words: ", er);
+      return;
+    };
+
     try{
 
       const res = await updateProfileInfo(
-        choosenImage.name, username, shortDesc, myDetails, moreDetailsDesc, mySkills, mySocialMedia
+        choosenImage?.name ? choosenImage.name : "" , username, shortDesc, myDetails, moreDetailsDesc, mySkills, mySocialMedia
       );
 
       if(!res || !res?.ok) return setSubmitError("Unknown error :(");
 
-      if(res.ok === false) return setSubmitError(res?.dt ? res.dt : "Error updating your profile, please try again later");
+      if(res.ok !== true) return setSubmitError(res?.dt ? res.dt : "Error updating your profile, please try again later");
 
+      sendToModerate();
+      
       if(username !== userUsername) setUserUsername(username);
 
       /* Upload pic to Backblaze b2 cloud storage */
+      if(!choosenImage) return setSubmitError(null);
+
       let optimisedImage = choosenImage;
       if(optimisedImage?.size > 300000)
         optimisedImage = await handleImage(choosenImage, 0.3);
 
-      const url = res.dt.uploadUrl;
-      const authToken = res.dt.authToken;
-      const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(optimisedImage));
+      console.log("image file: ", optimisedImage);
 
-      const body = {
-        optimisedImage
-      };
+      if(!optimisedImage) return setSubmitError("Error please try again or use different picture");
 
-      const headers = {
-        Authorization: authToken,
-        "X-Bz-File-Name": res.dt.picName,
-        "Content-Length": optimisedImage.size,
-        "X-Bz-Content-Sha1": hash,
-        "X-Bz-Info-Author": "unknown",
-        'Access-Control-Allow-Credentials': true
-      };
-
-      const uploadPicRes = await axios.post(url, body, headers);
-
-      console.log("Upload res: ", uploadPicRes);
-
-      // function file2Buffer (file) {
-      //   return new Promise(function (resolve, reject) {
-      //     const reader = new FileReader()
-      //     const readFile = function(event) {
-      //       const buffer = reader.result
-      //       resolve(buffer)
-      //     }
-      
-      //     reader.addEventListener('load', readFile)
-      //     reader.readAsArrayBuffer(file)
-      //   })
-      // }
-
-      // console.log("my image", await file2Buffer(optimisedImage));
-
-      // try {
-      //   const b2 = new B2({
-      //     applicationKeyId: BACKBLAZE_KEY_ID,
-      //     applicationKey: BACKBLAZE_APP_KEY,
-      //   });  
-      //   const { data: authData } = await b2.authorize();
-      //   console.log("b2 authentication: ", authData);
-      //   const { data: uploadData } = await b2.getUploadUrl({
-      //       bucketId: BACKBLAZE_BUCKET_ID,
-      //   });
-      //   const { data } = await b2.uploadFile({
-      //     uploadUrl: uploadData.uploadUrl,
-      //     uploadAuthToken: uploadData.authorizationToken,
-      //     data: await file2Buffer(optimisedImage),
-      //     fileName: res.dt.picName,
-      //     mime: "image/jpeg"
-      //   });
-      //   console.log("b2 picture uploaded successfully!");
-      // } catch(err){
-      //   console.log("error uploading pic", err.message);
-      // }
-
-      // console.log("image file: ", optimisedImage);
-      // const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(optimisedImage));
-      // const xhr = new XMLHttpRequest();
-      // const reader = new FileReader();
-      // xhr.withCredentials = false;
-
-      // xhr.addEventListener("load", function () {
-      //   let msg;
-      //   if (xhr.status >= 200 && xhr.status < 300) {
-      //       msg = '2xx response from B2 API. Success.';
-      //   } else if (xhr.status >= 400 && xhr.status < 500) {
-      //       msg = '4xx error from B2 API. See other console log messages and requests in network tab for details.';
-      //   } else if (xhr.status >= 500) {
-      //       msg = '5xx error from B2 API. See other console log messages and requests in network tab for details.';
-      //   } else {
-      //       msg = 'Unknown error. See other console log messages and requests in network tab for details.';
-      //   }
-      //   console.log(`Upload file result: ${msg}`);
-      // });
-
-      // xhr.open("POST", res.dt.uploadUrl);
-      // xhr.setRequestHeader("Content-Type", "image/jpg");
-      // xhr.setRequestHeader("Authorization", authToken);
-      // xhr.setRequestHeader("X-Bz-File-Name", res.dt.picName);
-      // xhr.setRequestHeader("X-Bz-Content-Sha1", hash);
-      // xhr.setRequestHeader("Access-Control-Allow-Origin", "*");
-
-      // const fileToSend = optimisedImage;
-
-      // xhr.send(fileToSend);
-
-    //   const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(optimisedImage));
-
-    //   const url = res.dt.uploadUrl;
-    //   const authToken = res.dt.authToken;
-    //   const body = {
-    //     optimisedImage
-    //   };
-    //   const headers = {
-    //     Authorization: authToken,
-    //     "X-Bz-File-Name": res.dt.picName,
-    //     "Content-Length": optimisedImage.size,
-    //     "X-Bz-Content-Sha1": hash,
-    //     "X-Bz-Info-Author": "unknown",
-    //     'Access-Control-Allow-Credentials': true
-    // }
-
-    //   const uploadRes = await fetch(url, body, headers);
-
-    //   console.log(uploadRes);
-
-      // const { data } = await b2.uploadFile({
-      //   uploadUrl: res.dt.uploadUrl,
-      //   uploadAuthToken: res.dt.authToken,
-      //   data: optimisedImage,
-      //   fileName: res.dt.picName,
-      //   mime: optimisedImage.type
-      // });  
+      uploadPicture(optimisedImage, res)
+        .then((ress) => {
+          console.log("uploadPic response: ", ress);
+        }, (ress) => {
+          console.log("uploadPic response: ", ress);
+          handleFailedUpload();
+        });
 
       return setSubmitError(null);
 
@@ -213,6 +177,50 @@ const Profile = ({
       setSubmitError(err.message);
     }
 
+  };
+
+  const uploadPicture = async(pic, res) => {
+
+    if(!pic || pic.length <= 0) return false;
+
+    return new Promise(function(resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function() {
+        const hash = CryptoJS.SHA1(CryptoJS.enc.Latin1.parse(reader.result));
+        const xhr = new XMLHttpRequest();
+        xhr.withCredentials = false;
+
+        xhr.addEventListener("load", function () {
+          let msg;
+          if (xhr.status >= 200 && xhr.status < 300) {
+              msg = '2xx response from B2 API. Success.';
+              setProfileImageName(res.dt.picName);
+              resolve(true);
+          } else if (xhr.status >= 400 && xhr.status < 500) {
+              msg = '4xx error from B2 API. See other console log messages and requests in network tab for details.';
+          } else if (xhr.status >= 500) {
+              msg = '5xx error from B2 API. See other console log messages and requests in network tab for details.';
+          } else {
+              msg = 'Unknown error. See other console log messages and requests in network tab for details.';
+          }
+          console.log(`Upload file result: ${msg}`);
+          reject(false);
+        });
+
+        xhr.onerror = function() {
+          reject(false);
+        };
+
+        xhr.open("POST", res.dt.uploadUrl);
+        xhr.setRequestHeader("Content-Type", pic.type);
+        xhr.setRequestHeader("Authorization", res.dt.authToken);
+        xhr.setRequestHeader("X-Bz-File-Name", res.dt.picName);
+        xhr.setRequestHeader("X-Bz-Content-Sha1", hash);
+        const fileToSend = pic;
+        xhr.send(fileToSend);
+      };
+      reader.readAsBinaryString(pic);
+    });
   };
 
   useEffect(() => {
@@ -251,7 +259,6 @@ const Profile = ({
 
       if(!profileData || !profileData?.ok || profileData.ok === false || !profileData.dt) return
 
-      setProfileImageName(profileData.dt.profileImageName);
       setUsername(profileData.dt.username);
       setShortDesc(profileData.dt.introParagraph);
       setMyDetails(profileData.dt.smallDetails ? profileData.dt.smallDetails : []);
@@ -259,6 +266,7 @@ const Profile = ({
       setMySkills(profileData.dt.skills ? profileData.dt.skills : []);
       setMySocialMedia(profileData.dt.contacts ? profileData.dt.contacts : []);
       setNotification(profileData.dt.notifications);
+      setProfileImageName(profileData.dt.profileImageName);
       
       setFetchLoading(false);
 
@@ -272,34 +280,37 @@ const Profile = ({
   };
 
   async function fetchProfileData(){
+
     try{
 
       setFetchLoading(true);
 
-      console.log("params: ", params.id, "userID: ", userID);
-
       const profileData = await getProfile(params.id);
 
-      if(!profileData || !profileData?.ok || profileData.ok === false || !profileData.dt) return
+      if(!profileData || !profileData?.ok || profileData.ok === false || !profileData.dt) return;
 
-      setProfileImageName(profileData.dt.profileImageName);
+      console.log("profile data: ", profileData);
+
       setUsername(profileData.dt.username);
-      set_navigateTo_userUsername(profileData.dt.username);
+      setHisId(profileData.dt.profileOwnerId);
+      setProfileId(profileData.dt.profileId);
       setShortDesc(profileData.dt.introParagraph);
       setMyDetails(profileData.dt.smallDetails ? profileData.dt.smallDetails : []);
       setMoreDetailsDesc(profileData.dt.paragraph);
       setMySkills(profileData.dt.skills ? profileData.dt.skills : []);
       setMySocialMedia(profileData.dt.contacts ? profileData.dt.contacts : []);
+      setOtherProfilePicName(profileData.dt.profileImageName);
 
       setFetchLoading(false);
 
       const postsRes = await getPostsForThisUser();
 
-      console.log(postsRes)
+      console.log(postsRes);
       
     } catch(err){
       console.log(err.message);
     }
+    
   };
 
   async function getPostsForThisUser(isMe){
@@ -352,6 +363,7 @@ const Profile = ({
       setUserID(res.dt.user_id);
       setUserUsername(res.dt.user_username);
       setProfileImageName(res.dt.profile_image);
+      setRole(res.dt.role);
 
       if(res.dt.user_id === params.id) setIsMyProfile(true);
 
@@ -359,6 +371,12 @@ const Profile = ({
       console.log(err.message);
     }
 
+  };
+
+  const navigateToChat = () => {
+      setIsChat(!isChat);
+      set_navigateTo_userProfilePic(otherProfilePicName);
+      set_navigateTo_userID(hisId);
   };
 
   function handleLastProjects() {
@@ -369,7 +387,7 @@ const Profile = ({
       arr.push({
         key_id: posts[i]._id,
         name: posts[i].desc,
-        image: profile_Image //posts[i].post_images[0] 
+        image: posts[i].post_images[0].picturesNames
       });
     };
 
@@ -377,16 +395,79 @@ const Profile = ({
 
   };
 
+  const handleProfileReport = () => {
+
+    console.log("handle report function, hisId: ", hisId, " report_objectId: ", profileId);
+
+    if(isMyProfile) return setFetchResult("Can't report on your self :l");
+
+    if(hisId.length <= 0 || profileId.length <= 0)
+      return setFetchResult("Refresh the page or exit and enter again");
+
+    if(!userID || userID.length <= 0) return setFetchResult("please login to your account to make a report");
+
+    set_navigateTo_userID(hisId);
+    set_navigateTo_userUsername(username);
+    setReportOnThisId(hisId);
+    setReportType("profile");
+    setIsReport(true);
+
+  };
+
+  const sendToModerate = async() => {
+
+    try {
+
+        const res = await moderate(userID, "moderate profile");
+
+        if(res.ok === true) return console.log("Successfully send to moderate");
+
+        console.log(res.dt);
+
+    } catch(err) {
+        console.log("Error send to moderate: ", err.message);
+    }
+
+  };
+
+  const navigateToPost = (postId) => {
+    setPostID(postId);
+    navigate('/single-post');
+  };
+
+  const navigateToExternalUrl = (url) => {
+
+    window.open(url, "_blank");
+
+  };
+
   const params = useParams();
 
   useEffect(() => {
+
     setRunFetchOnce(true);
+
     window.Buffer = buffer.Buffer;
+
+    if(window.innerWidth <= 920) setIsMobile(true);
+
+    function settingMobile (){
+      if(window.innerWidth > 920){
+        setIsMobile(false);
+        setMobileContact(false);
+      } else {
+        setIsMobile(true);
+      }
+    };
+
+    window.addEventListener("resize", settingMobile);
+
+    return () => window.removeEventListener("resize", settingMobile);
+
   }, []);
 
   useEffect(() => {
     
-    setProfileImageName(null);
     setUsername("");
     setShortDesc("");
     setMyDetails([]);
@@ -396,6 +477,10 @@ const Profile = ({
     setPosts([]);
     setMyLastProjects([]);
     setIsSelected("Profile");
+    set_navigateTo_userID("");
+    set_navigateTo_userUsername("");
+    setReportType("profile");
+    setMobileContact(false);
 
     if(!userID || userID === "" || !userUsername || userUsername === "") setUserInfo();
 
@@ -403,6 +488,7 @@ const Profile = ({
 
       if(isMyProfile === true){
         fetchMyProfileData();
+        setOtherProfilePicName("");
       } else{
         fetchProfileData();
       }
@@ -412,7 +498,11 @@ const Profile = ({
 
   useEffect(() => {
     if(posts.length > 0) handleLastProjects();
-  }, [posts])
+  }, [posts]);
+
+  useEffect(() => {
+    console.log("report_objectId: ", reportOnThisId);
+  }, [reportOnThisId]);
 
   return (
 
@@ -421,18 +511,49 @@ const Profile = ({
 
         <div className='ProfilePageContainer'>
 
-          <Comments isComments={isComments} setIsComments={setIsComments} />
+          {isCheckUrl && <div className='checkUrlContainer'><div className='checkUrl'>
+            <h2>You are heading to this url</h2>
+            <p>{checkUrl}</p>
+            <h3>-- if it looks suspicous to you, please consider 
+              checking the url with urL scanners 
+              toolsHere some tools to use 
+              <span onClick={() => navigateToExternalUrl("https://urlscan.io/")}>
+              {" "}urlScan</span>, 
+              <span onClick={() => navigateToExternalUrl("https://www.ipqualityscore.com/threat-feeds/malicious-url-scanner")}>
+              {" "}IpQualityScore</span>,  
+              <span onClick={() => navigateToExternalUrl("https://www.criminalip.io/domain")}>
+              {" "}Criminal Ip</span>...etc
+            </h3>
+            <div className='checkUrlButtons'>
+              <button onClick={() => setIsCheckUrl(false)} 
+              style={{background: "#e9e9e9", color: "grey"}}>Cancel</button>
+              <button onClick={() => navigateToExternalUrl(checkUrl)}>Navigate</button>
+            </div>
+          </div></div>}
+          
+          {isMobile && <div className='mobileContact' onClick={() => setMobileContact(!mobileContact)}>
+            <img src={arrow} style={{
+              transform: mobileContact ? null : "rotateZ(180deg)"
+            }}/>
+          </div>}
+
+          <Comments isComments={isComments} setIsComments={setIsComments} setIsReport={setIsReport} />
 
           <div className='ProfilePage'>
 
             <div className='ProfilePageContentContainer'>
               <div className='ProfielPageContent'>
 
+                <p>{fetchResult}</p>
+
                 <div className='ProfileInfo'>
 
-                  <div className={"ProfileSmallInfo"}>
+                  <div className="ProfileSmallInfo">
+
+                    <button className='reportButton' onClick={handleProfileReport}>Report</button>
                     
-                    <img src={profile_Image} alt=''/>
+                    <img src={(otherProfilePicName && otherProfilePicName.length > 0) ? 
+                    `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${otherProfilePicName}` : null} alt=''/>
                     <h2>{username}</h2>
                     <hr />
 
@@ -466,12 +587,12 @@ const Profile = ({
                     <h3>More Details</h3>
                     <p>{moreDetailsDesc}</p>
 
-                    <h3>Last Projects</h3>
+                    <h3>Last Posts</h3>
                     <div className='lastProjectsDiv'>
                       <ul className='lastProjects'>
                           {myLastProjects.map((pj) => (
-                            <li key={pj.key_id}>
-                              <img src={pj.image} alt=''/>
+                            <li key={pj.key_id} onClick={() => navigateToPost(pj.key_id)}>
+                              <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
                               <p>{pj.name}</p>
                             </li>
                           ))}
@@ -508,6 +629,12 @@ const Profile = ({
                         topCommentCreatorName={post.topCommentCreatorName ? post.topCommentCreatorName : "odhfuiehf"}
                         topComment={post.topComment ? post.topComment : "odhfuiehfwqkln3rljkqehuruq3rgyagfjheg"}
                         setIsComments={setIsComments}
+                        setIsReport={setIsReport}                        
+                        handleDeleteThisPost={() => {
+                          setPosts(
+                            posts.filter(p => p._id !== post._id)
+                          )
+                        }}
                       />
                     ))}
 
@@ -524,25 +651,29 @@ const Profile = ({
               </div>
             </div>  
 
-            <div className='ProfilePageContact'>
+            <div className='ProfilePageContact' style={{
+              position: isMobile ? "absolute" : "unset", 
+              right: mobileContact ? "0" : "100%",
+              boxShadow: !mobileContact ? "none" : null
+            }}>
 
               <h2>Social Media</h2>
 
               {mySocialMedia.map((c) => (
-                <Link to={c.url}>
+                <Link onClick={() => {setIsCheckUrl(true); setCheckUrl(c.url);}}>
                   <div className={`ContactWith changeSVGcolor ${c.special_class ? c.special_class : ""}`}>
                     <Svgs type={c.name_of_app} />
                     <label>Contact me on {c.name_of_app}</label>
                   </div>
                 </Link>
               ))}
-              
-              <div className='message_me' onClick={() => {setIsChat(!isChat);}}>
-                <Svgs type={"Comments"} />
-              </div>
 
             </div>
 
+          </div>
+
+          <div className='message_me' onClick={navigateToChat}>
+              <Svgs type={"Comments"} />
           </div>
 
         </div>
@@ -551,12 +682,42 @@ const Profile = ({
 
         <div className='ProfilePageContainer'>
 
-          <Comments isComments={isComments} setIsComments={setIsComments} />
+          {isCheckUrl && <div className='checkUrlContainer'><div className='checkUrl'>
+            <h2>You are heading to this url</h2>
+            <p>{checkUrl}</p>
+            <h3>-- if it looks suspicous to you, please consider 
+              checking the url with url scanners 
+              tools, here some tools to use 
+              <span onClick={() => navigateToExternalUrl("https://urlscan.io/")}>
+              {" "}urlScan</span>, 
+              <span onClick={() => navigateToExternalUrl("https://www.ipqualityscore.com/threat-feeds/malicious-url-scanner")}>
+              {" "}IpQualityScore</span>,  
+              <span onClick={() => navigateToExternalUrl("https://www.criminalip.io/domain")}>
+              {" "}Criminal Ip</span>...etc
+            </h3>
+            <div className='checkUrlButtons'>
+              <button onClick={() => setIsCheckUrl(false)} 
+              style={{background: "#e9e9e9", color: "grey"}}>Cancel</button>
+              <button onClick={() => navigateToExternalUrl(checkUrl)}>Navigate</button>
+            </div>
+          </div></div>}
+
+          {isMobile && <div className='mobileContact' onClick={() => setMobileContact(!mobileContact)}>
+            <img src={arrow} style={{
+              transform: mobileContact ? null : "rotateZ(180deg)"
+            }}/>
+          </div>}
+
+          <Comments isComments={isComments} setIsComments={setIsComments} setIsReport={setIsReport}/>
 
           {(isEditSmallInfo === true || isEditContacts === true || isEditMoreInfo === true) && 
             <div className='EditProfilePageHeader'>
               <p>{submitError}</p>
-              <button className='cancelEdit'>Cancel</button>
+              <button className='cancelEdit' onClick={() => {
+                setIsEditContacts(false);
+                setIsEditMoreInfo(false);
+                setIsEditSmallInfo(false);
+              }}>Cancel</button>
               <button className='submitEdit' onClick={() => submit()}>Submit</button>
             </div>}
             
@@ -572,8 +733,13 @@ const Profile = ({
                     <div className='edit_icon' onClick={() => {setIsEditSmallInfo(!isEditSmallInfo)}}>
                       <Svgs type={"Edit"} />
                     </div>
+
+                    <div className='share_icon' onClick={() => setIsShareAccount(true)}>
+                      <Svgs type={"Share"}/>
+                    </div>
                     
-                    <img src={choosenImage?.size > 300000 && choosenImageURL ? choosenImageURL : profile_Image} alt='' />
+                    <img src={(profileImageName && profileImageName.length > 0) ? 
+                    `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${profileImageName}` : null} alt='' />
                     
                     <h2>{username}</h2>
                     <hr />
@@ -708,12 +874,12 @@ const Profile = ({
                     <h3>More Details</h3>
                     <p>{moreDetailsDesc}</p>
 
-                    <h3>Last Projects</h3>
+                    <h3>Last Posts</h3>
                     <div className='lastProjectsDiv'>
                       <ul className='lastProjects'>
                           {myLastProjects.map((pj) => (
-                            <li key={pj.key_id}>
-                              <img src={pj.image} alt=''/>
+                            <li key={pj.key_id} onClick={() => navigateToPost(pj.key_id)}>
+                              <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
                               <p>{pj.name}</p>
                             </li>
                           ))}
@@ -754,7 +920,7 @@ const Profile = ({
                       <ul className='lastProjects'>
                           {myLastProjects.map((pj) => (
                             <li key={pj.key_id}>
-                              <img src={pj.image} alt=''/>
+                              <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
                               <p>{pj.name}</p>
                             </li>
                           ))}
@@ -854,6 +1020,12 @@ const Profile = ({
                         topCommentCreatorName={post.topCommentCreatorName ? post.topCommentCreatorName : "odhfuiehf"}
                         topComment={post.topComment ? post.topComment : "odhfuiehfwqkln3rljkqehuruq3rgyagfjheg"}
                         setIsComments={setIsComments}
+                        setIsReport={setIsReport}
+                        handleDeleteThisPost={() => {
+                          setPosts(
+                            posts.filter(p => p._id !== post._id)
+                          )
+                        }}
                       />
                     ))}
 
@@ -869,16 +1041,20 @@ const Profile = ({
               </div>
             </div>  
 
-            {isEditContacts === false ? (<div className='ProfilePageContact'>
+            {isEditContacts === false ? (<div className='ProfilePageContact' style={{
+              position: isMobile ? "absolute" : "unset", 
+              right: mobileContact ? "0" : "100%",
+              boxShadow: mobileContact ? null : "none"
+            }}>
 
               <div className='edit_icon' onClick={() => {setIsEditContacts(!isEditContacts)}}>
-                      <Svgs type={"Edit"} />
+                  <Svgs type={"Edit"} />
               </div>
 
               <h2>Social Media</h2>
 
               {mySocialMedia.map((c) => (
-                <Link to={c.url}>
+                <Link onClick={() => {setIsCheckUrl(true); setCheckUrl(c.url);}}>
                   <div className={`ContactWith changeSVGcolor ${c.special_class ? c.special_class : ""}`}>
                     <Svgs type={c.name_of_app} />
                     <label>Contact me on {c.name_of_app}</label>
@@ -887,7 +1063,11 @@ const Profile = ({
               ))}
 
             </div>) : (
-            <div className='ProfilePageContact'>
+            <div className='ProfilePageContact' style={{
+              position: isMobile ? "absolute" : "unset", 
+              right: mobileContact ? "100%" : "0",
+              boxShadow: mobileContact ? "none" : null
+            }}>
 
               <div className='edit_icon' onClick={() => {setIsEditContacts(!isEditContacts)}}>
                   <Svgs type={"Edit"} />

@@ -2,13 +2,14 @@ import React, { useEffect, useRef, useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { DataContext } from '../../DataContext';
 import { getChats, sendMessage, deleteMessage, createContact } from '../../logic/api';
-import { setClientOnChats } from '../../logic/helperMethods';
+import { getBadWords, setClientOnChats } from '../../logic/helperMethods';
 import './Chat.css';
 import { motion } from 'framer-motion';
 import Svgs from '../../Assets/icons/Svgs';
 import image from '../../Assets/images/idea_image.jpg';
+import useInterval from '../../logic/CustomHooks/useInterval';
 
-const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
+const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => {
 
     const textToSendRef = useRef();
     const chatsListRef = useRef();
@@ -18,8 +19,12 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
     const [chats, setChats] = useState([]);
     const [runOnce, setRunOnce] = useState([]);
     const [isAddedContact, setIsAddedContact] = useState(null);
+    const [delay, setDelay] = useState(null);
     const { 
-        userID, userUsername, navigateTo_userID, navigateTo_userUsername, contacts, setContacts, setIsMyProfile
+        userID, userUsername, navigateTo_userID, 
+        navigateTo_userUsername, contacts, setContacts, 
+        setIsMyProfile, navigateTo_userProfilePic,
+        set_navigateTo_userUsername, setReportOnThisId, setReportType
     } = useContext(DataContext);
     const navigate = useNavigate();
 
@@ -27,13 +32,28 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
 
         try{
 
-            setSendingMessage(true);
-
             const text = textToSendRef.current.value;
 
             if(!text || text === "") return setError("Message can't be empty");
 
-            const res = await sendMessage(userUsername, navigateTo_userID, text);
+            const testForBadWords = getBadWords(text);
+
+            if(testForBadWords.length > 0) {
+                let er = "";
+                for (let i = 0; i < testForBadWords.length; i++) {
+                    if(i !== testForBadWords.length - 1){
+                        er += `"${testForBadWords[i]}", `;
+                    } else {
+                        er += `"${testForBadWords[i]}"`;
+                    }
+                }
+                setError("This is bad words: ", er);
+                return;
+            };
+
+            setSendingMessage(true);
+
+            const res = await sendMessage(navigateTo_userID, text);
 
             if(!res || !res.ok || res.ok === false) return setError(res.dt ? res.dt : "Error sending message please refresh the page or login to your account");
 
@@ -70,7 +90,9 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
 
         } catch(err){
             console.log(err.message);
+            setError(err.message);
         }
+        
     };
 
     const deleteChat = async(messageID) => {
@@ -154,7 +176,23 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
         }
     };
 
+    const handleChatReport = (message_id) => {
+
+        console.log("handle chat report function, hisId: ", navigateTo_userID, " report_objectId: ", message_id);
+    
+        if(navigateTo_userID.length <= 0 || message_id.length <= 0)
+          return setError("Refresh the page or exit and enter again");
+    
+        if(!userID || userID.length <= 0) return setError("please login to your account to make a report");
+    
+        setReportOnThisId(message_id);
+        setReportType("chat");
+        setIsReport(true);
+    
+    };
+
     useEffect(() => {
+
         chatsListRef.current.scrollTo({
             top: 900,
             behaviour: "smooth"
@@ -166,23 +204,25 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
         }
 
         setRunOnce(true);
+
     }, []);
 
     useEffect(() => {
-        let myInterval = null;
-        if(runOnce === true && isChat === true) fetchChat();
-        if(isChat === false){
-            setChats([]);
-            clearInterval(myInterval);
-        };
-        if(isChat === true){
-            myInterval = setInterval(() => {
-                fetchChat();
-            }, 10000);
-        };
+        if(runOnce === true && isChat === true) {
+            setDelay(10000);
+        } else if(runOnce === true && isChat === false) {
+            setDelay(null);
+        }
+        setChats([]);
+        setReportType("");
+        setReportOnThisId("");
         setIsAddedContact(null);
         isExistContact();
     }, [runOnce, isChat]);
+
+    useInterval(() => {
+        fetchChat();
+    }, delay);
 
     return (
         <motion.div className='ChatContainer'
@@ -197,7 +237,8 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
             <div className='Chat'>
 
                 <div className='ChatHeader'>
-                    <img src={image} alt=''/>
+                    <img src={(navigateTo_userProfilePic && navigateTo_userProfilePic.length > 0) ? 
+                    `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${navigateTo_userProfilePic}` : null} alt=''/>
                     <h3 onClick={() => navigateToProfile()} >{navigateTo_userUsername}</h3>
                     {isAddedContact === false && <div className='addContactDiv' onClick={() => createNewContact()}>
                         Add Contact <Svgs type={"addContact"}/>
@@ -207,20 +248,14 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
                     </div>
                 </div>
 
-                <label style={{color: 'red', background: 'white'}}>{error}</label>
+                {error.length > 0 && <p className='error'>{error}</p>}
 
                 <div className='ulDiv' ref={chatsListRef}>
 
                     <ul >
                         {chats.map((c) => (
                             <li key={c._id}>
-
-                                <label style={{
-                                    justifyContent: c.client === true ? "start" : "end",
-                                    marginLeft: c.client === true ? "4px" : null,
-                                    marginRight: c.client === false ? "16px" : null
-                                }}>{c.createdAt}</label>
-                                
+    
                                 {c.client === true ? (
                                     <div className='ChatClientDiv'>
                                         <div>
@@ -231,15 +266,21 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected }) => {
                                     </div>
                                 ) : (
                                     <div className='ChatRecieverDiv'>
-                                        <h3>{c.sender_username}</h3>
+                                        <div>
+                                            <h3>{c.sender_username}</h3>
+                                            <button onClick={() => handleChatReport(c._id)} 
+                                            >Report</button>
+                                        </div>
                                         <p>{c.chat_text}</p>
                                     </div>
                                 )}
 
-                                
-                                
-                                
-                                
+                                <label style={{
+                                    justifyContent: c.client === true ? "start" : "end",
+                                    marginLeft: c.client === true ? "4px" : null,
+                                    marginRight: c.client === false ? "16px" : null
+                                }}>{c.createdAt}</label>
+
                             </li>
                         ))}
                     </ul>

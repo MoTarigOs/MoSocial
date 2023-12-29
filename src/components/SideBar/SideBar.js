@@ -2,20 +2,38 @@ import React, { useEffect, useState, useContext } from 'react';
 import { DataContext } from '../../DataContext';
 import './SideBar.css';
 import { motion } from 'framer-motion';
-import { logout, refreshTokens, getContacts } from '../../logic/api';
-import profileImage from '../../Assets/images/bg.jpg';
+import { logout, refreshTokens, getContacts, deleteAccount } from '../../logic/api';
 import shareIcon from '../../Assets/icons/share_massenger_icon.svg';
 import LiButton from '../Buttons/LiButton';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Svgs from '../../Assets/icons/Svgs';
+import useInterval from '../../logic/CustomHooks/useInterval';
+import profilePNG from '../../Assets/icons/profile-circle-svgrepo-com.svg';
 
-  const SideBar = ({ isSideBar, isLoading, setIsLoading, isSelected, setIsSelected }) => {
+  const SideBar = ({ 
+    isSideBar, isLoading, setIsLoading, isSelected, setIsSelected, 
+    setIsDeleteAccount, setIsReport, setIsShareAccount
+  }) => {
 
   const [sideBar, setSideBar] = useState(1);
   const [contactNewMessages, setContactNewMessages] = useState(0);
   const [runOnce, setRunOnce] = useState(false);
   const [fetchResult, setFetchResult] = useState("");
-  const { setIsMyProfile, contacts, setContacts, userID, setUserID, userUsername, setUserUsername } = useContext(DataContext);
+  const [isSettingsItems, setIsSettingsItems] = useState(false);
+  const [delay, setDelay] = useState(null);
+  const { 
+    setIsMyProfile, contacts, setContacts, userID, 
+    setUserID, userUsername, setUserUsername, profileImageName,
+    set_navigateTo_userID, set_navigateTo_userUsername, setReportType,
+    setReportOnThisId, role,
+    setIsBlockUser, setActivityName
+  } = useContext(DataContext);
+  const [settingsItemsArray, setSettingsItemsArray] = useState([
+    {id: 0, val: "Report issue", toLink: null, enable: false}, 
+    {id: 1, val: "Participate in our demos", toLink: null, enable: false}, 
+    {id: 2, val: "Delete My Account", toLink: null, enable: false}
+  ]);
+  const navigate = useNavigate();
 
   const logOut = async() => {
 
@@ -23,19 +41,18 @@ import Svgs from '../../Assets/icons/Svgs';
 
       const res = await logout();
 
-      if(!res || !res?.ok){
+      if(!res || !res?.ok || res.ok !== true){
         setFetchResult( res.dt ? res.dt : "Error logging out");
         return;
       }
 
-      if(res.ok === false){
-        setFetchResult(res.dt);
-      } else{
-        setFetchResult(res.dt)
-      }   
+      setFetchResult(res.dt);
+      setUserID(""); 
+      setUserUsername("");
 
     } catch(err){
       setFetchResult(err.message);
+      console.log(err.message);
     }
 
   };
@@ -55,7 +72,42 @@ import Svgs from '../../Assets/icons/Svgs';
     }
 
   };
-  
+
+  const settingSettings = () => setIsSettingsItems(!isSettingsItems);
+
+  const handleSettingsItem = (id) => {
+
+    if(userID.length <= 0) return;
+
+    if(id === 0) {
+      set_navigateTo_userID("");
+      set_navigateTo_userUsername("");
+      setReportType("");
+      setReportOnThisId("");
+      setIsReport(true);
+      return;
+    }
+    
+    if(id === 2) setIsDeleteAccount(true);
+
+  };
+
+  const navigateToProfile = async() => {
+
+      setIsMyProfile(true);
+      set_navigateTo_userID("");
+      navigate(`/profile/${userID}`);
+
+};
+
+  const bePartener = () => {
+
+    setActivityName("be an admin");
+
+    setIsBlockUser(true);
+
+  };
+
   useEffect(() => {
     setIsLoading(true);
     const t = setTimeout(() => {
@@ -81,12 +133,19 @@ import Svgs from '../../Assets/icons/Svgs';
     window.addEventListener("resize", settingSideBar);
 
     setRunOnce(true);
-    return () => {window.removeEventListener("resize", settingSideBar)};
+    return () => {
+      window.removeEventListener("resize", settingSideBar);
+      setDelay(null);
+    };
   }, []);
 
+  useInterval(() => {
+    fetchContacts();
+  }, delay);
+
   useEffect(() => {
-    if(runOnce === true) setInterval(() => fetchContacts(), 10 * 60 * 1000);
-    return () => clearInterval();
+    if(runOnce === true) 
+      setDelay(10 * 60 * 1000);
   }, [runOnce]);
 
   useEffect(() => {
@@ -127,23 +186,25 @@ import Svgs from '../../Assets/icons/Svgs';
         <li key={1}>
           <div className='sideNavProfile'>
 
-            {userID.length > 0 && userUsername.length > 0 && <img src={profileImage} className='profileImageSideNav'/>}
+            {(userID.length > 0 && userUsername.length > 0) ?
+            <img onClick={navigateToProfile} src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${profileImageName}`} className='profileImageSideNav'/>
+            : <img src={profilePNG} className='profileImageSideNav' style={{padding: 4}}/>}
             
             {sideBar === 1 && userID.length > 0 && userUsername.length > 0 ? (
               <>
                 <div>
                   <h1>{userUsername}</h1>
-                  <Link to="/profile/0" onClick={() => {setIsMyProfile(true); setIsSelected("myProfile");}}><p>Edit my profile</p></Link>
+                  <Link to={`/profile/${userID}`} onClick={() => {setIsMyProfile(true); setIsSelected("myProfile");}}><p>Edit my profile</p></Link>
                 </div>
-                <img src={shareIcon} className='share_icon'/> 
+                <Svgs type={"Share"} on_click={() => setIsShareAccount(true)}/> 
               </> ) : (
               <>
-                <Link to="/sign" className={`notAuthedATag ${isSelected === "signPage" ? "signPageSelected" : ""}`} onClick={() => setIsSelected("signPage")}>
+                {sideBar === 1 && <Link to="/sign" className={`notAuthedATag ${isSelected === "signPage" ? "signPageSelected" : ""}`} onClick={() => setIsSelected("signPage")}>
                   <section className={`notAuthedSection ${isSelected === "signPage" ? "signPageSelected" : ""}`}>
                       <button>Sign Up</button>
                       <Svgs type={"Profile"}/>
                   </section>
-                </Link>
+                </Link>}
               </>
               )
             }
@@ -199,47 +260,25 @@ import Svgs from '../../Assets/icons/Svgs';
           notifications={contactNewMessages > 0 ? contactNewMessages : null}
         />
 
-        {window.innerWidth > 1100 && <><p style={{fontSize: "0.75rem", fontWeight: 400, marginLeft: 16, marginTop: 24}}>Improve your appearance</p>
+        {window.innerWidth > 1100 && <><p style={{fontSize: "0.75rem", fontWeight: 400, marginLeft: 16, marginTop: 24}}>Improve our website</p>
         </>}
 
-        <LiButton 
+        {(role === "admin" || role === "owner") && <LiButton 
           key={6}
-          myLink={"/ads"}
-          name={"Ads"}
+          myLink={"/admin-page"}
+          name={"Admin Console"}
           icon={shareIcon}
           isSelected={isSelected}
           setIsSelected={setIsSelected}
           isLoading={isLoading}
           sideBar={sideBar}
-        />
+        />}
 
         <LiButton 
           key={7}
-          myLink={"/top_searches"}
-          name={"Top Searches"}
-          icon={shareIcon}
-          isSelected={isSelected}
-          setIsSelected={setIsSelected}
-          isLoading={isLoading}
-          sideBar={sideBar}
-        />
-
-        <LiButton 
-          key={8}
-          myLink={"/quality"}
-          name={"Quality"}
-          icon={shareIcon}
-          isSelected={isSelected}
-          setIsSelected={setIsSelected}
-          isLoading={isLoading}
-          sideBar={sideBar}
-        />
-
-        <LiButton 
-          key={9}
-          myLink={"/colaperate"}
-          name={"Colaperate"}
-          icon={shareIcon}
+          myLink={"/about"}
+          name={"About"}
+          icon={"sdn"}
           isSelected={isSelected}
           setIsSelected={setIsSelected}
           isLoading={isLoading}
@@ -254,34 +293,44 @@ import Svgs from '../../Assets/icons/Svgs';
           letterSpacing: 0,
           maxWidth: 200
         }}>
-          Help us with your feedback, and be one of our partners. it will get a lot of experience</p>
+          Help us with your feedback, and be one of our partners. you will get a lot of experience</p>
           </>}
           
         <LiButton 
-          key={10}
-          myLink={"/partener"}
+          key={8}
           name={"Be a partener"}
           icon={shareIcon}
           isSelected={isSelected}
           setIsSelected={setIsSelected}
           isLoading={isLoading}
           sideBar={sideBar}
+          onClickHandler={bePartener}
         />
 
         <LiButton 
-          key={11}
-          myLink={"/help"}
-          name={"Help"}
+          key={9}
+          name={"Settings"}
           icon={shareIcon}
           isSelected={isSelected}
           setIsSelected={setIsSelected}
           isLoading={isLoading}
           sideBar={sideBar}
+          onClickHandler={settingSettings}
         />
 
-        <div className='logoutDiv' onClick={() => {logOut(); setUserID(""); setUserUsername("");}}>
+        {isSettingsItems && <ul className='settingsItemUL'> 
+          {settingsItemsArray.map((item) => (
+            <li onClick={() => handleSettingsItem(item.id)}>
+              <button style={{color: (userID.length > 0) ? null : "#d6d6d6"}}>
+                {item.val}
+              </button>
+            </li>
+          ))}
+        </ul>}
+
+        <div className='logoutDiv' onClick={logOut}>
           <LiButton 
-            key={11}
+            key={13}
             myLink={"/"}
             name={"Exit"}
             icon={shareIcon}

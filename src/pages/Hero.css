@@ -7,12 +7,33 @@
     overflow-y: auto;
     position: relative;
     z-index: 1;
+
+    .arrowSearch{
+        position: absolute;
+        top: -4px;
+        left: 70%;
+        background: rgb(12, 138, 255);
+        z-index: 1;
+        padding: 8px 12px;
+        border-bottom-left-radius: 100%;
+        border-bottom-right-radius: 100%;
+        cursor: pointer;
+        z-index: 5;
+
+        & img{
+            width: 32px;
+            height: 24px;
+            object-fit: cover;
+            transform: rotateZ(90deg);
+        }
+    }
 }
 
 .HeroContainer .HeroHeader{
     width: 100%;
     height: fit-content;
-    padding: 32px 64px 12px 64px;
+    padding: 32px 64px 24px 64px;
+    overflow: hidden;
 
     & .selectMenuFilter{
         width: fit-content;
@@ -103,15 +124,6 @@
     outline: none;
 }
 
-.HeroContainer .HeroHeader .searchForMobile svg{
-    width: 32px;
-    height: 32px;
-    & path{
-        fill: white;
-        stroke: white;
-    }
-}
-
 .HeroContainer .Hero{
     width: 100%;
     height: 100%;
@@ -147,30 +159,34 @@
     .HeroContainer .Hero{
         padding: 32px;
     }
+    .HeroContainer .HeroHeader{
+        padding-bottom: 48px;
+    }
 }
 
 @media screen and (max-width: 960px){
     .HeroContainer .HeroHeader{
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.267);
         z-index: 2;
+        padding-bottom: 64px;
     }
 }
 
 @media screen and (max-width: 680px){
     .HeroContainer .HeroHeader{
-        width: 100%;
-        height: 64px;
-        display: flex;
-        align-items: end;
-        padding: 12px 24px;
+        padding: 12px;
+
+        .selectMenuFilter{
+            display: none;
+        }
     }
 
-    .HeroContainer::before{
-        background: url('../Assets/images/landing_bg.jpg') center center/cover no-repeat;
-    }
+    .HeroContainer .Hero{
+        padding: 12px;
 
-    .HeroContainer::after{    
-        background: linear-gradient(90deg, rgb(38, 72, 244) 0%, rgba(20,111,219,1) 35%, rgba(33,91,184,1) 62%, rgba(62,91,215,1) 79%, rgb(56, 66, 245) 100%);
+        .postsUL{
+            gap: 12px;
+        }
     }
 }
 

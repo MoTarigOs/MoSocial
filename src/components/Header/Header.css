@@ -9,7 +9,30 @@
     display: flex;
     justify-content: center;
     position: fixed;
-    z-index: 5;
+    z-index: 12;
+
+    .searchForMobile {
+
+        .search{
+            width: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            padding: 12px;
+            z-index: 10;
+            background: rgb(255, 190, 190);
+        }
+    
+        & svg{
+            width: 32px;
+            height: 32px;
+            
+            & path{
+                fill: white;
+                stroke: white;
+            }
+        }
+    }
 }
 
 .HeaderContainer .Header{
@@ -21,6 +44,7 @@
     justify-content: space-between;
     align-items: center;
     color: white;
+    position: relative;
 }
 
 .HeaderContainer .Header .Logo{
@@ -80,6 +104,12 @@
     cursor: pointer;
     color: inherit;
     transition: all 0.3s ease-out;
+
+    & a{
+        display: flex;
+        gap: 8px;
+        align-items: center;
+    }
 }
 
 .HeaderContainer .Header .right_section .profile button{
@@ -140,35 +170,133 @@
 .HeaderContainer .mobileSideMenu{
     width: 280px;
     max-width: 70%;
-    height: 100vh;
-    background: #ffffff;
+    min-height: 100vh;
     position: absolute;
+    overflow-x: hidden;
     top: 0;
     left: 0;
+
+    & button{
+        font-size: 1.5rem;
+        padding: 12px;
+        text-align: start;
+    }
+
+    & a{
+        background: #e9e9e9;
+        border-radius: 6px;
+        z-index: 1;
+    }
+
+    & a:hover{
+        background: white;
+    }
+
+    & a:active{
+        background: rgb(199, 199, 199);
+    }
+
+    &::before{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100vh;
+        background: url('../../Assets/images/landing_bg.jpg') center center/cover no-repeat;
+        z-index: 100;
+        transform: rotateY(180deg);
+        opacity: 0.5;
+        z-index: -1;
+    }
+    
+    &::after{
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: linear-gradient(90deg, rgb(38, 72, 244) 0%, rgba(20,111,219,1) 35%, rgba(33,91,184,1) 62%, rgba(62,91,215,1) 79%, rgb(56, 66, 245) 100%);
+        opacity: 0.9;
+        z-index: -1;
+    }
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
 }
 
-.HeaderContainer .mobileSideMenu ul{
+.HeaderContainer .mobileSideMenu .sideNavDiv{
+    width: 100%;
+    height: 100vh;
+    overflow-y: scroll;
+
+    &::-webkit-scrollbar{
+        display: none;
+    }
+}
+
+.HeaderContainer .mobileSideMenu .sideButtonsUL{
     width: 100%;
     height: fit-content;
-    padding: 24px;
+    padding: 24px 12px;
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 8px;
 }
 
-.HeaderContainer .mobileSideMenu ul li{
+.HeaderContainer .mobileSideMenu .sideButtonsUL li{
     width: 100%;
     height: fit-content;
 }
 
 .HeaderContainer .mobileSideMenu ul li .sideNavMobileProfile{
     width: 100%;
-    height: fit-content;
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
     box-sizing: border-box;
     margin-bottom: 24px;
+}
+
+.HeaderContainer .mobileSideMenu ul li .sideNavMobileSign{
+    background: #e9e9e9;
+    display: flex;
+    align-items: center;
+    border-radius: 6px;
+    justify-content: space-between;
+    width: fit-content;
+    gap: 12px;
+    padding: 12px;
+    cursor: pointer;
+    margin-bottom: 24px;
+    z-index: 2;
+
+    & a{
+        background: transparent;
+
+        & button{
+            cursor: pointer;
+            padding: 0;
+            color: black;
+        }
+    }
+
+    & svg{
+        width: 30px;
+        height: 30px;
+        stroke: black;
+    }
+
+    &:hover{
+        background: #fff;
+    }
+
+    &:active{
+        background: #d6d6d6;
+    }
 }
 
 .HeaderContainer .mobileSideMenu ul li .sideNavMobileProfile .profileImageSideNav{
@@ -180,7 +308,9 @@
 
 .HeaderContainer .mobileSideMenu ul li .sideNavMobileProfile h1{
     font-size: 1.725rem;
+    color: rgb(230, 230, 230);
     cursor: pointer;
+    margin-right: auto;
 }
 
 @media screen and (max-width: 330px){ 

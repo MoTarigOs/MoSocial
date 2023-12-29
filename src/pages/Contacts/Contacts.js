@@ -18,6 +18,8 @@ const Contacts = ({ setIsChat, isChat }) => {
 
             setContacts(res.dt ? res.dt : []);
 
+            console.log("fetched contacts: ", res.dt);
+
         } catch(err){
             console.log(err.message);
         }
@@ -52,11 +54,11 @@ const Contacts = ({ setIsChat, isChat }) => {
 
     useEffect(() => {
         setRunOnce(true);
-    }, [])
+    }, []);
 
     useEffect(() => {
         if(runOnce === true) fetchContacts();
-    }, [runOnce])
+    }, [runOnce]);
 
   return (
     <div className='ContactsPage'>

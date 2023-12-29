@@ -8,20 +8,15 @@ import Svgs from '../../Assets/icons/Svgs';
 import image from '../../Assets/images/idea_image.jpg';
 import likeIcon from '../../Assets/icons/like_icon.png';
 import likedIcon from '../../Assets/icons/liked_icon.png';
+import { getBadWords } from '../../logic/helperMethods';
 
-const Comments = ({ isComments, setIsComments }) => {
+const Comments = ({ isComments, setIsComments, setIsReport }) => {
 
     const { 
-        postID, 
-        setUserID,
-        userID, 
-        userUsername,
-        setUserUsername, 
-        setProfileImageName, 
-        profileImageName, 
-        set_navigateTo_userID, 
-        navigateTo_userID,
-        setIsMyProfile 
+        postID, setUserID, userID, userUsername,
+        setUserUsername, setProfileImageName, profileImageName, 
+        set_navigateTo_userID, navigateTo_userID, setIsMyProfile,
+        setReportType, setReportOnThisId, set_navigateTo_userUsername
     } = useContext(DataContext);
     const textToSendRef = useRef();
     const commentsArrayListRef = useRef();
@@ -45,11 +40,24 @@ const Comments = ({ isComments, setIsComments }) => {
 
         try{
 
-            setPublishingComment(true);
-
             const text = textToSendRef.current.value;
 
             if(!text || text.length <= 0) return setError("Text is empty");
+
+            const testForBadWords = getBadWords(text);
+
+            if(testForBadWords.length > 0) {
+                let er = "";
+                for (let i = 0; i < testForBadWords.length; i++) {
+                    if(i !== testForBadWords.length - 1){
+                        er += `"${testForBadWords[i]}", `;
+                    } else {
+                        er += `"${testForBadWords[i]}"`;
+                    }
+                }
+                setError("This is bad words: ", er);
+                return;
+            }
             
             if(!profileImageName || profileImageName.length <= 0){
                 const askUser = window.confirm("There is error in your profile image\npublish the comment without image & fix it later ?");
@@ -57,6 +65,8 @@ const Comments = ({ isComments, setIsComments }) => {
             }
 
             if(!postID || postID.length <= 0) return setError("there is no post to comment on :(");
+
+            setPublishingComment(true);
 
             const res = await createComment(userUsername, profileImageName, text, postID);
 
@@ -93,6 +103,8 @@ const Comments = ({ isComments, setIsComments }) => {
             }
 
             setPublishingComment(false);
+
+            setError("");
             
         } catch(err){
             console.log(err.message);
@@ -252,6 +264,18 @@ const Comments = ({ isComments, setIsComments }) => {
         }
     };
 
+    const handleCommentReport = (creator_id, creator_name, id) => {
+
+        if(!userID || userID.length <= 0) return setError("please login to your account");
+
+        set_navigateTo_userID(creator_id);
+        set_navigateTo_userUsername(creator_name);
+        setReportType("comment");
+        setReportOnThisId(id);
+        setIsReport(true);
+
+    };
+
     useEffect(() => {
         commentsArrayListRef.current.scrollTo({
             bottom: 2000,
@@ -271,6 +295,10 @@ const Comments = ({ isComments, setIsComments }) => {
             setLimit(12);
             setIsLoading(null);
             setIsNoMoreComments(false);
+            set_navigateTo_userID("");
+            set_navigateTo_userUsername("");
+            setReportType("");
+            setReportOnThisId("");
         }
 
     }, [isComments]);
@@ -286,15 +314,17 @@ const Comments = ({ isComments, setIsComments }) => {
         <motion.div className='CommentsContainer'
             initial={{
                 y: "150vh",
-                height: 0
+                display: "flex"
             }}
             animate={{
                 y: isComments === true ? 0 : "180vh",
-                height: isComments === true ? null : 0
+                display: isComments === true ? "flex" : "none"
             }}
         >
 
             <div className='Comments'>
+                
+                <p>{error}</p>
 
                 <div className='QuitComments' onClick={() => setIsComments(false)}>
                     <Svgs type={"Exit"}/>
@@ -311,7 +341,7 @@ const Comments = ({ isComments, setIsComments }) => {
                                         <div className='svgDiv' onClick={() => alertDeletion(c._id)}><Svgs type={"Delete"} /></div>
                                         {checkIsAlerting(c._id) === true 
                                         && <div className='alert'>
-                                                <p>delete this contact ?</p>
+                                                <p>delete this Comment ?</p>
                                                 <div style={{}}>
                                                     <button style={{color: '#cdcdcd'}} onClick={() => removeAlertDeletion(c._id)}>Cancel</button>
                                                     <button onClick={() => deleteThisComment(c._id, c.commenter_id)}>Delete</button>
@@ -320,7 +350,7 @@ const Comments = ({ isComments, setIsComments }) => {
                                     </div>}
 
                                     <div className='commentCreator'>
-                                        <img src={image} className='profileImage'/>
+                                        <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${c.commenter_image}`} className='profileImage'/>
                                         <h1 onClick={() => navigateToProfile(c.commenter_id)}>{c.commenter_name}</h1> 
 
                                         <div className='likeDiv' style={{transform: "rotateZ(180deg) translateY(-6px)"}}>
@@ -362,6 +392,8 @@ const Comments = ({ isComments, setIsComments }) => {
                                             animate={{scale: c.disliked === true ? 1 : 0}}
                                             />
                                         </div>
+
+                                        <button className='reportButton' onClick={() => handleCommentReport(c.commenter_id, c.commenter_name, c._id)}>Report</button>
                                     </div>
                                     <p>{c.comment_text}</p>
                                     <h6>Created At: {(c.createdAt && (typeof c.createdAt === 'string' || c.createdAt instanceof String)) ?
@@ -371,10 +403,17 @@ const Comments = ({ isComments, setIsComments }) => {
                             </li>
                         ))}
 
-                        <button className='morePostsButton' onClick={() => getCommentsOnThisPost()}>{commentsArray.length > 0 ? (isLoading === false ? (isNoMoreComments === false ? "More comments" : "No more comments") : "Loading...") : "Refresh"}</button>
-
                     </ul>
 
+                    <div className='morePostsButton' 
+                    style={{
+                        position: !isLoading && commentsArray.length > 0 ? "unset" : null, 
+                        height: !isLoading && commentsArray.length > 0 ? "fit-content" : null, 
+                        padding: !isLoading && commentsArray.length > 0 ? "24px 0" : null
+                    }}>
+                        <button onClick={() => getCommentsOnThisPost()}>{commentsArray.length > 0 ? (isLoading === false ? (isNoMoreComments === false ? "More comments" : "No more comments") : "Loading Comments...") : (isLoading ? "Loading..." :  "No Comments")}</button>
+                    </div>
+                            
                 </div>
                 
                 <div className='commentSend'>

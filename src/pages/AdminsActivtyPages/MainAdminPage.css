@@ -1,0 +1,100 @@
+.MainAdminPageContainer{
+    width: 100%;
+    height: 100%;
+    background: #e9e9e9;
+    overflow-y: auto;
+
+    .sectionsContainer{
+        width: 100%;
+        height: fit-content;
+        padding: 32px;
+
+        & ul{
+            width: 100%;
+            height: fit-content;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+
+            .sectionCard{
+                width: 100%;
+                height: 230px;
+                max-width: 380px;
+                position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                border-radius: 16px;
+                overflow: hidden;
+                cursor: pointer;
+                transition: all 0.3s ease-out;
+        
+                & img{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    display: none;
+                }
+        
+                & h2{
+                    position: absolute;
+                    z-index: 1;
+                    transition: all 0.3s ease-out;
+                }
+
+                &::after{
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    width: 100%;
+                    height: 100%;
+                    background: black;
+                    opacity: 0;
+                    transition: all 0.3s ease-out;
+                }
+
+                &:hover{
+                    border-radius: 8px;
+                    transition: all 0.3s ease-in;
+
+                    & h2{
+                        scale: 1.02;
+                        transition: all 0.3s ease-in;
+                    }
+
+                    &::after{
+                        opacity: 0.08;
+                        transition: all 0.3s ease-in;
+                    }
+                }
+
+                &:active{
+                    & h2{
+                        scale: 1;
+                        transition: all 0.05s ease-in;
+                    }
+
+                    &::after{
+                        opacity: 0.18;
+                        transition: all 0.05s ease-in;
+                    }
+                }
+            }
+        }
+
+
+    }
+}
+
+@media screen and (max-width: 680px){
+    .MainAdminPageContainer{
+        .sectionsContainer{
+            padding: 8px;
+
+            & ul{
+                gap: 12px;
+            }
+        }
+    }
+}

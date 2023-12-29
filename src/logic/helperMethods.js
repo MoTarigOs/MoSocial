@@ -1,4 +1,5 @@
 import imageCompression from 'browser-image-compression';
+import { BadWords } from './BadWords';
 
 export const isValidUsername = (username) => {
     var regexPattern = /^[A-Za-z][A-Za-z0-9_]{2,32}$/;
@@ -91,7 +92,7 @@ export const handleImage = async(image, maxSizeinMB) => {
 
   try {
     const compressedFile = await imageCompression(image, options);
-    console.log(compressedFile);
+    console.log("Image compressed");
     return new File([compressedFile], compressedFile.name, { type: compressedFile.type });  
   } catch (error) {
     console.log(error);
@@ -128,12 +129,15 @@ export const setPostInfoOnComments = (comments, posts) => {
   for (let i = 0; i < comments.length; i++) {
     for (let j = 0; j < posts.length; j++) {
       if(comments[i].post_id === posts[j]._id){
+        const cmntPicUrl =  `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${comments[i].commenter_image}`;
+        const postPicUrl =  `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${posts[j].post_images[0].picturesNames}`;
         comments[i] = {
           ...comments[i], 
           post_id: posts[j]._id,
-          post_first_image: posts[j].post_images[0], 
+          post_first_image: postPicUrl, 
           post_title: posts[j].desc, 
-          post_created_at: posts[j].createdAt 
+          post_created_at: posts[j].createdAt ,
+          commentorImage: cmntPicUrl
         };
       };
     };
@@ -168,4 +172,13 @@ export const setClientOnChats = (chats, userID) => {
 
   return chats;
 
+};
+
+export const getBadWords = (str) => {
+  if(!str) return [];
+    let words = [];
+    BadWords.forEach(word => 
+      str.replace(/ /g, '').toLowerCase()
+        .includes(word.replace(/ /g, '').toLowerCase()) ? words.push(word) : null);
+    return words;
 };

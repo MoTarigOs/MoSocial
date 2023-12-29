@@ -2,23 +2,17 @@ import React from 'react';
 import './ExplorePage.css';
 import CatagoryCard from '../../components/Cards/CatagoryCard';
 import TrendingCard from '../../components/Cards/TrendingCard';
-
 import image from '../../Assets/images/bg.jpg';
 import shatGptImage from '../../Assets/images/chatgpt_image.jpg';
 import marketingImage from '../../Assets/images/idea_image.jpg';
 import ui_ux_Image from '../../Assets/images/ui_design_image.jpg';
 import MiniProfileCard from '../../components/Cards/MiniProfileCard';
-import MobileHeader from '../../components/MobileHeader/MobileHeader';
 
-const ExplorePage = ({ isMobile }) => {
+const ExplorePage = () => {
 
   return (
 
     <div className='ExploreContainer'>
-
-      {isMobile === true &&
-      <MobileHeader  isMobile={isMobile} /> 
-      }
 
       <div className='ExplorePage'>
         

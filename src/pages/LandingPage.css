@@ -249,6 +249,11 @@
 }
 
 @media screen and (max-width: 480px){
+
+    .LandingSection{
+        padding: 0 12px;
+    }
+
     .LandingSection .landing_cards_container{
         display: none;
     }
@@ -270,7 +275,13 @@
     }
 
     .home_buttons{
-        flex-direction: column;
         gap: 8px;
+        width: 100%;
+
+        & button{
+            width: 100%;
+            padding: 12px;
+            font-size: 1.3rem;
+        }
     }
 }

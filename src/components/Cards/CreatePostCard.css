@@ -17,7 +17,7 @@
         align-items: center;
         justify-content: space-between;
         padding: 0 16px;
-        margin-top: 12px;
+        margin-top: 8px;
 
         & h2{
             margin-right: auto;
@@ -160,6 +160,23 @@
 
             &::-webkit-scrollbar{
                 display: none;
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 680px){
+    .CreatePostCard{
+        gap: 8px;
+        padding: 8px;
+
+        .CreatePostHeader{
+            padding: 0 8px;
+            flex-wrap: wrap;
+            
+            & h2{
+                font-size: 1rem;
+                white-space: nowrap;
             }
         }
     }

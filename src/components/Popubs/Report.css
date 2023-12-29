@@ -1,0 +1,255 @@
+.ReportContainer{
+    width:  100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.534);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    z-index: 5;
+    padding: 32px;
+
+    .ReportWrapper{
+        max-width: 100%;
+        max-height: 100%;
+        overflow-y: scroll;
+        background: white;
+        padding: 24px;
+        border-radius: 16px;
+        box-shadow: 0 2px 10px black;
+
+        &::-webkit-scrollbar{
+            display: none;
+        }
+    }
+
+    .Report{
+        width: fit-content;
+        height: fit-content;
+        max-width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        gap: 16px;
+
+        
+        & .problemsUl{
+            display: flex;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 12px;
+
+            & li{
+                display: flex;
+                width: 100%;
+                align-items: center;
+                gap: 12px;
+
+                & input{
+                    width: 24px;
+                    height: 24px;
+                    cursor: pointer;
+                }
+
+                & p{
+                    color: black;
+                    font-size: 1.35rem;
+                    line-break: anywhere;
+                    max-width: calc(100% - 36px);
+                }
+            }
+
+            & input{
+                max-width: 100%;
+                padding: 16px;
+                border-radius: 6px;
+                outline: none;
+                font-size: 1.2rem;
+            }
+        }
+
+        & label{
+            font-weight: 600;
+        }
+
+        & textarea{
+            padding: 12px;
+            margin-top: -16px;
+            width: 100%;
+            resize: none;
+            outline: none;
+            border-radius: 4px;
+            font-size: 1.05rem;
+            line-height: 22px;
+            height: 52px;
+
+            &::-webkit-scrollbar{
+                display: none;
+            }
+        }
+
+        & .problemScreenshots {
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+
+            & .browseDiv{
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+
+                & label{
+                    font-size: 1.15rem;
+                    font-weight: 600;
+                }
+            
+                & button{
+                    padding: 8px 16px;
+                    background: rgb(69, 69, 250);
+                    color: white;
+                    border-radius: 6px;
+                    border: none;
+                    cursor: pointer;
+                    font-size: 0.8rem;
+                }
+
+                & button:hover{
+                    background: rgb(108, 108, 255);
+                }
+
+                & button:active{
+                    background: rgb(28, 28, 206);
+                }
+            }
+
+            & input{
+                display: none;
+            }
+            
+            & ul{
+                max-width: 400px;
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                margin-top: -12px;
+
+                & img{
+                    width: 100%;
+                    height: 100%;
+                    object-fit: cover;
+                    border-radius: 12px;
+                }
+            }
+
+            .NoImageHolder{
+                width: 100%;
+                height: 100px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background: rgb(234, 234, 234);
+                border-radius: 8px;
+                margin-top: -12px;
+
+                & svg{
+                    width: 32px;
+                    height: 32px;
+                }
+            }
+        }
+
+        .buttons{
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 8px;
+
+            & button{
+                width: 100%;
+                padding: 10px 16px;
+                border-radius: 6px;
+                outline: none;
+                border: none;
+                cursor: pointer;
+
+                & img{
+                    width: 24px;
+                    height: 24px;
+                    object-fit: cover;
+                }
+
+                &:hover{
+                    opacity: 0.65;
+                }
+
+                &:active{
+                    opacity: 0.95;
+                }
+            }
+        }
+    }
+
+    .Reported{
+        width: fit-content;
+        height: fit-content;
+        max-width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 32px;
+
+        p{
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+    }
+}
+
+@media screen and (max-width: 960px){
+    .ReportContainer{
+        margin-top: 64px;
+        height: calc(100vh - 64px);
+        padding: 24px;
+
+        .ReportWrapper{
+            padding: 16px;
+        }
+
+        .Report{
+            .problemsUl{
+                gap: 8px;
+    
+                & li{
+                    gap: 8px;
+    
+                    & input{
+                        width: 16px;
+                        height: 16px;
+                    }
+    
+                    & p{
+                        font-size: 0.9rem;
+                        font-weight: 600;
+                        color: grey;
+                        line-break: unset;
+                        word-break: keep-all;
+                    }
+                }
+
+                & input{
+                    font-size: 1rem;
+                }
+            }
+    
+            & .problemScreenshots {
+    
+                .browseDiv label{
+                    font-size: 0.9rem;
+                }
+            }
+        }
+    }
+}

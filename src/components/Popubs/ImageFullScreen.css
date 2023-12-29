@@ -1,0 +1,116 @@
+.ImageFullScreenContainer{
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    background: rgba(0, 0, 0, 0.86);
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 12;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 24px;
+    padding: 24px;
+
+    .exitDiv{
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin-left: 24px;
+        margin-top: 24px;
+        padding: 12px;
+        background: rgb(239, 239, 239);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        z-index: 1;
+    }
+
+    .exitDiv:hover{
+        background: rgb(222, 222, 222);
+    }
+
+    .arrows{
+        width: 48px;
+        height: 48px;
+        object-fit: cover;
+        cursor: pointer;
+        transition: all 0.3s ease-out;
+    }
+
+    .arrows:hover{
+        scale: 1.15;
+        transition: all 0.3s ease-in;
+    }
+
+    .arrows:active{
+        scale: 0.9;
+    }
+
+    .mainImageDiv{
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 24px;
+
+        .mainImage{
+            height: 100%;
+            border-radius: 4px;
+            max-width: 100%;
+            object-fit: cover;
+        }
+    }
+
+    .mobileDots{
+        display: flex;
+        gap: 16px;
+        display: none;
+
+        & span{
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: grey;
+            cursor: pointer;
+        }
+    }
+
+}
+
+@media screen and (max-width: 680px){
+    .ImageFullScreenContainer{
+        padding: 24px 80px;
+        gap: 4px;
+
+        .arrows{
+            display: none;
+        }
+    
+        .mainImageDiv{
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100%;
+            max-height: 100vh;
+            padding: 64px 12px;
+
+            .mainImage{
+                height: auto;
+                max-height: 100%;
+                width: 100%;
+            }   
+        }
+
+        .mobileDots{
+            display: flex;
+        }
+    }
+}

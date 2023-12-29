@@ -4,6 +4,23 @@
     position: relative;
     z-index: 2;
 
+    .mobileContact{
+        position: absolute;
+        top: 30%;
+        right: -8px;
+        z-index: 10;
+        background: rgb(41, 41, 41);
+        padding: 12px;
+        border-top-left-radius: 50%;
+        border-bottom-left-radius: 50%;
+
+        & img{
+            width: 24px;
+            height: 24px;
+            object-fit: cover;
+        }
+    }
+
     & .edit_icon{
         position: absolute;
         right: 8px;
@@ -26,20 +43,38 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+        gap: 12px;
+        padding: 16px;
 
         & p{
-            color: rgb(255, 69, 69);            
+            color: rgb(255, 69, 69);       
+            margin-right: auto;     
         }
 
         & .cancelEdit{
             background: white;
             padding: 8px 12px;
+            border: none;
+            background: #e9e9e9;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cancelEdit:hover{
+            background: #f1f2f1;
         }
 
         & .submitEdit{
             background: rgb(55, 55, 255);
             padding: 8px 12px;
             color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .submitEdit:hover{
+            background: #564af9;
         }
     }
 
@@ -52,11 +87,31 @@
         font-size: 1.25rem;
         margin-top: 24px;
     }
-}
 
-@media screen and (max-width: 680px){
-    .ProfilePageContainer{
-        margin-top: 64px;
+    .message_me{
+        width: 72px;
+        height: 72px;
+        position: absolute;
+        bottom: 24px;
+        right: 24px;
+        background: rgb(72, 72, 241);
+        border-radius: 50%;
+        padding: 16px;
+        cursor: pointer;
+        z-index: 10;
+
+        &:hover{
+            opacity: 0.88;
+        }
+
+        & svg{
+            width: 100%;
+            height: 100%;
+            & path{
+                stroke: white;
+                fill: white;
+            }
+        }
     }
 }
 
@@ -113,7 +168,7 @@
     font-size: 0.8rem;
     border-radius: 8px;
     position: relative;
-    z-index: 6;
+    z-index: 1;
 
     & img{
         width: 96px;
@@ -188,6 +243,31 @@
             &:active{
                 color: black;
             }
+        }
+    }
+
+    .reportButton{
+        padding: 8px 12px;
+        background: orange;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .reportButton:hover{
+        background: rgb(255, 189, 65);
+    }
+
+    .share_icon{
+        position: absolute;
+        top: 0;
+        left: 0;
+        margin-top: 16px;
+        margin-left: 16px;
+
+        & svg path{
+                fill: rgb(108, 108, 108);
         }
     }
 
@@ -290,10 +370,14 @@
                     color: rgb(255, 255, 255);
                     z-index: 1;
                     bottom: 0;
-                    font-size: 1.2rem;
+                    font-size: 0.8rem;
                     font-weight: 600;
-                    width: 100%;
-                    text-align: center;
+                    word-break: keep-all;
+                    padding: 0 8px;
+                    width: 26ch;
+                    overflow: hidden;
+                    white-space: nowrap;
+                    text-overflow: ellipsis;
                 }
             }
         }
@@ -378,6 +462,12 @@
         display: flex;
         gap: 24px;
         flex-wrap: wrap;
+        margin-bottom: 120px;
+
+        & h3{
+            width: 100%;
+            text-align: center;
+        }
     }
 
     & .PostHeroCard{
@@ -394,13 +484,16 @@
     max-width: 300px;
     min-width: 250px;
     height: 100vh;
-    padding: 0 0;
+    padding: 16px;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     position: relative;
     gap: 16px;
+    background: white;
+    z-index: 6;
+    top: 0;
 
     & a{
         text-decoration: none;
@@ -447,31 +540,6 @@
         & path{
             stroke: white;
             fill: white;
-        }
-    }
-
-    & .message_me{
-        width: 72px;
-        height: 72px;
-        position: absolute;
-        bottom: 24px;
-        right: 24px;
-        background: rgb(72, 72, 241);
-        border-radius: 50%;
-        padding: 16px;
-        cursor: pointer;
-
-        &:hover{
-            opacity: 0.88;
-        }
-
-        & svg{
-            width: 100%;
-            height: 100%;
-            & path{
-                stroke: white;
-                fill: white;
-            }
         }
     }
 
@@ -549,4 +617,118 @@
         }
     }
 
+}
+
+.checkUrlContainer{ 
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.774);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 12;
+    padding: 32px;
+    
+    .checkUrl{
+        background: white;
+        padding: 16px;
+        border-radius: 8px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+
+        & p{
+            padding: 12px;
+            border-radius: 6px;
+            background: #e9e9e9;
+            color: rgb(58, 58, 58);
+            font-size: 1.2rem;
+        }
+
+        & h3{
+            font-size: 1rem;
+            color: grey;
+            font-weight: 500;
+        }
+
+        & span{
+            color: rgb(58, 58, 255);
+            font-size: 1.1rem;
+            cursor: pointer;
+        }
+
+        .checkUrlButtons{
+            width: 100%;
+            display: flex;
+            gap: 8px;
+
+            & button{
+                width: 100%;
+                background: rgb(58, 58, 255);
+                color: white;
+                padding: 8px;
+                border-radius: 4px;
+                border: none;
+                font-size: 1rem;
+                text-align: center;
+                cursor: pointer;
+
+                &:hover{
+                    opacity: 0.85;
+                }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 920px){
+    .ProfilePage {
+        .ProfilePageContact{
+            box-shadow: 1px 1px 16px grey;
+            max-height: 100%;
+        }
+    }
+}
+
+
+@media screen and (max-width: 680px){
+    .ProfilePageContainer{
+        margin: 0;
+    }
+
+    .ProfilePage {
+        gap: 0;
+
+        .ProfielPageContent {
+            padding: 12px;
+            gap: 12px;
+
+            .ProfileProjects{
+                gap: 12px;
+
+                .projectsCards{
+                    gap: 12px;
+                }
+
+                .PostHeroCard{
+                    min-width: unset;
+                    max-width: unset;
+                }
+            }
+
+            
+            .ProfileInfo{
+                flex-direction: column;
+                gap: 12px;
+
+                .ProfileSmallInfo{
+                    width: 100%;
+                    max-width: unset;
+                    min-width: unset;
+                    min-height: unset;
+                }
+            }
+        }
+    }
 }

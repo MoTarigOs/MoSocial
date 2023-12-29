@@ -1,0 +1,80 @@
+.comment{
+    width: 100%;
+    padding: 16px;
+    border-radius: 8px;
+    background: white;
+    box-shadow: 0 3px 12px rgb(210, 210, 210);
+
+    .creator{
+        width: 100%;
+        display: flex;
+        align-items: center;
+        margin-bottom: 12px;
+
+        & img{
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        & h2{
+            margin-right: auto;
+            font-size: 1.6rem;
+            cursor: pointer;
+
+            &:hover{
+                color: #5c5c5c;
+            }
+
+            &:active{
+                color: #404040;
+            }
+        }
+
+        .menu{
+            position: relative;
+
+            & svg{
+                cursor: pointer;
+            }
+
+            & ul{
+                position: absolute;
+                background: rgb(81, 81, 81);
+                top: 100%;
+                left: -100%;
+                width: fit-content;
+                color: white;
+                align-items: center;
+                padding: 0;
+                gap: 0;
+                border-radius: 4px;
+                overflow: hidden;
+                transform-origin: 0 0;
+
+                & li{
+                    cursor: pointer;
+                    padding: 8px 12px;
+                }
+
+                & li:hover{
+                    background: rgb(61, 61, 61);
+                }
+
+                & li:active{
+                    background: rgb(51, 51, 51);
+                }
+            }
+        }
+    }
+
+    & p{
+        width: 100%;
+        padding: 12px;
+        border-radius: 4px;
+        background: #e9e9e9;
+    }
+}

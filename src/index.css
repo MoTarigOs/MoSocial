@@ -3,6 +3,10 @@
   padding: 0;
 }
 
+html{
+  font-size: 16px;
+}
+
 body {
   margin: 0;
   font-family: 'Roboto', 'Oxygen',
@@ -41,12 +45,41 @@ code {
   display: flex;
   background: rgb(255, 255, 255);
   scroll-snap-align: center;
+  margin-top: 96px;
 }
 
 .App .side_page .loading_routes{
   width: 100%;
   position: relative;
 }
+
+.offline{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  gap: 24px;
+
+  & svg{
+    width: 96px;
+    height: 96px;
+
+  }
+}
+
+@media screen and (max-width: 960px){
+  .App .side_page{
+    height: calc(100vh - 64px);
+  }
+
+  .offline h3{
+    font-size: 0.7rem;
+  }
+}
+
+
 
 /* customize scroll bar */
 ::-webkit-scrollbar{

@@ -3,14 +3,14 @@ import { DataContext } from '../DataContext';
 import { getPosts } from '../logic/api';
 import { setLikedPosts } from '../logic/helperMethods';
 import './Hero.css';
-import Button from '../components/Buttons/Button';
 import { motion } from 'framer-motion';
 import HeroPostCard from '../components/Cards/HeroPostCard';
 import Svgs from '../Assets/icons/Svgs';
 import Tags from '../components/Tags/Tags';
 import Comments from '../components/Comments/Comments';
+import arrow from '../Assets/icons/arrow.svg';
 
-const Hero = ({ myRef, setIsLoading, isMobile }) => {
+const Hero = ({ myRef, setIsLoading, isMobile, setIsReport }) => {
 
     const searchInputRef = useRef();
     const [isLoadingPosts, setIsLoadingPosts] = useState(false);
@@ -21,6 +21,7 @@ const Hero = ({ myRef, setIsLoading, isMobile }) => {
     const [filter, setFilter] = useState("Date-of-publish");
     const [filterSeen, setFilterSeen] = useState("");
     const [searchText, setSearchText] = useState("");
+    const [isSearch, setIsSearch] = useState(false);
     const [isTag, setIsTag] = useState(false);
     const { contacts } = useContext(DataContext);
 
@@ -76,13 +77,14 @@ const Hero = ({ myRef, setIsLoading, isMobile }) => {
 
         const res = await getPosts(limit, myFilter, contacts, searchText);
         if(!res || !res?.ok || res.ok === false || !res.dt || res.dt.length <= 0) return setIsLoadingPosts(false);
-        console.log(res.dt);
         const newPosts = setLikedPosts(res.dt.posts, res.dt.likedPosts);
         setPosts(newPosts);
         const newLimit = limit > 50 ? limit : limit + 10;
         setLimit(newLimit);
 
         setIsLoadingPosts(false);
+        
+        console.log("Hero page post example: ", newPosts[0]);
 
       } catch(err){
           console.log(err.message);
@@ -104,18 +106,23 @@ const Hero = ({ myRef, setIsLoading, isMobile }) => {
     return (
       <div className='HeroContainer'>
 
-        <Comments isComments={isComments} setIsComments={setIsComments} />
+        <Comments isComments={isComments} setIsComments={setIsComments} setIsReport={setIsReport} />
+
+        {isMobile && <div className='arrowSearch' onClick={() => setIsSearch(!isSearch)}>
+          <img src={arrow} style={{transform: isSearch ? "rotateZ(-90deg)" : null}}/>
+        </div>}
 
         <motion.div className='HeroHeader'
+          style={{padding: !isMobile ? null : (!isSearch ? 0 : null) }}
           initial={{
             y: -300
           }}
           animate={{
-            y: 0
+            y: !isMobile ? 0 : (!isSearch ? -300 : 0),
+            height: !isMobile ? null : (!isSearch ? 0 : null)
           }}
         >
-          {isMobile === false ? (
-            <>
+            
               <form className='HeroSearchForm' onSubmit={(e) => e.preventDefault()}>
                 <div onClick={(e) => handleSearchSubmit(e)}>
                   <Svgs type={"Search"}/>
@@ -142,11 +149,7 @@ const Hero = ({ myRef, setIsLoading, isMobile }) => {
               </form>
 
               <Tags handleTag={handleTag} />
-            </>) : (
-              <div className='searchForMobile'>
-                <Svgs type={"Search"} on_click={handleSearchSubmit}/>
-              </div>
-            )}
+              
         </motion.div>
       
         <div className='Hero' ref={myRef}>
@@ -167,6 +170,7 @@ const Hero = ({ myRef, setIsLoading, isMobile }) => {
                 topComment={"skjdgfh8ewy7gfsdf78dsfbshjdgfhsdgfywsehfjgsdjhfgsdhjfgjshdghsfg"}
                 setIsComments={setIsComments}
                 handleDeleteThisPost={handleDeleteThisPost}
+                setIsReport={setIsReport}
               />
             ))}
                       

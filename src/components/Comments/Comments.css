@@ -8,7 +8,7 @@
     justify-content: center;
     align-items: center;
     overflow: hidden;
-    z-index: 3;
+    z-index: 12;
 }
 
 .CommentsContainer .Comments{
@@ -226,6 +226,7 @@
 
                     & p{
                         margin-left: 54px;
+                        cursor: text;
                     }
 
                     & h6{
@@ -234,7 +235,39 @@
                         font-weight: 300;
                         font-size: 0.75rem;
                     }
+
+                    .reportButton{
+                        background: orange;
+                        border-radius: 4px;
+                        padding: 8px 12px;
+                        border: none;
+                        cursor: pointer;
+                        font-size: 0.9rem;
+                    }
+
+                    .reportButton:hover{
+                        background: rgb(255, 185, 56);
+                    }
                 }
+            }
+        }
+
+        .morePostsButton{
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+
+            & button{
+                text-align: center;       
+                border: none;
+                color: rgb(136, 136, 136);
+                background: transparent;
+                font-size: 1.05rem;
             }
         }
     }
@@ -290,17 +323,37 @@
             }
         }
     }
+}
 
-    & .morePostsButton{
-        width: 100%;
-        text-align: center;
-        background: transparent;
-        border: none;
-        color: rgb(44, 44, 44);
-        font-size: 1.05rem;
-        margin: 24px 0;
+@media screen and (max-width: 960px){
+    .CommentsContainer{
+        height: calc(100vh - 64px);
     }
+}
 
+@media screen and (max-width: 600px){
+
+    .CommentsContainer{
+        padding: 0 12px;
+        margin: 0; 
+        height: calc(100vh - 64px);
+
+        .Comments{
+            width: 100%;
+
+            .ulDiv{
+                margin-left: 0;
+
+                & ul li{
+                    width: 100%;
+                }
+            }
+
+            .QuitComments{
+                position: relative;
+            }
+        }
+    }
 }
 
 @keyframes animateDeleteAlert{

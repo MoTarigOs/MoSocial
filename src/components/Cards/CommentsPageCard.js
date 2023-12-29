@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import './CommentsPageCard.css';
 
 const CommentsPageCard = ({
-    id, post_id, post_image, desc, date_of_publish, comment_creator, comment_image, comment
+    id, post_id, post_image, desc, date_of_publish, comment_creator, commenter_image, comment
 }) => {
 
   const { setPostID, postID } = useContext(DataContext);
@@ -40,7 +40,7 @@ const CommentsPageCard = ({
         </div>
 
         <div className='commentsPageCreator'>
-            <img src={comment_image} />
+            <img src={commenter_image} />
             <h1>{comment_creator}</h1> 
         </div>
 

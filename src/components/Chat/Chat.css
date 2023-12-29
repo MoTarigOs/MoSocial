@@ -3,7 +3,7 @@
     left: 0;
     top: 0;
     width: 100%;
-    height: 100vh;
+    height: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -29,6 +29,14 @@
         left: calc(-7.5% - 12px);
         top: -40%;
         background: rgba(62, 62, 62, 0.616);
+    }
+
+    .error{
+        width: 100%;
+        background: rgba(255, 110, 110, 0.952);
+        padding: 8px;
+        z-index: 1;
+        color: rgb(245, 245, 245);
     }
 
     & .ChatHeader{
@@ -130,7 +138,7 @@
                     color: rgb(140, 140, 140);
                 }
     
-                & .ChatClientDiv{
+                .ChatClientDiv{
                     width: fit-content;
                     height: fit-content;
                     padding: 12px;
@@ -172,14 +180,37 @@
                     }
                 }
     
-                & .ChatRecieverDiv{
+                .ChatRecieverDiv{
                     width: fit-content;
                     height: fit-content;
                     padding: 12px;
                     background: rgb(255, 255, 255);
                     border-radius: 12px;
                     margin-left: auto;
-                    margin-bottom: 2px;
+                    margin-bottom: 4px;
+
+                    & div{
+                        width: 100%;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        gap: 16px;
+                        margin-bottom: 8px;
+
+                        & button{
+                            padding: 6px 8px;
+                            background: orange;
+                            color: white;
+                            border-radius: 4px;
+                            border: none;
+                            font-size: 0.7rem;
+                            cursor: pointer;
+                        }
+
+                        & button:hover{
+                            background: rgb(255, 184, 51);
+                        }
+                    }
                 }
             }
         }
@@ -237,4 +268,9 @@
         }
     }
 
+}
+
+@media screen and (max-width: 960px){
+    .ChatContainer{
+    }
 }

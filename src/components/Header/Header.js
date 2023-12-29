@@ -1,18 +1,41 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import './Header.css';
 import { motion } from 'framer-motion';
-
 import LiButton from '../Buttons/LiButton';
 import myLogoImage from '../../Assets/icons/myLogo.png';
 import Svgs from '../../Assets/icons/Svgs';
 import Button from '../Buttons/Button';
-import shareIcon from '../../Assets/icons/share_icon.svg';
-import profileImage from '../../Assets/images/bg.jpg';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { DataContext } from '../../DataContext';
+import { logout } from '../../logic/api';
 
-const Header = ({ isScrolled, isMobile, isSelected, setIsSelected }) => {
+const Header = ({ 
+    isScrolled, setIsReport, isSelected, 
+    setIsSelected, handleScroll, setIsDeleteAccount, 
+    setIsShareAccount 
+}) => {
 
     const [isMenuBarClicked, setIsMneuBarClicked] = useState(false);
+    const { 
+        setActivityName, setIsBlockUser, setUserID, setUserUsername,
+        userID, set_navigateTo_userID, set_navigateTo_userUsername, 
+        setReportType, setReportOnThisId, userUsername,
+        profileImageName, setIsMyProfile, setProfileImageName,
+        role
+    } = useContext(DataContext);
+    const [sideButtons, setSideButtons] = useState([
+        {id: 1, name: "Home", link: "/"},
+        {id: 2, name: "Comments", link: "/comments"},
+        {id: 3, name: "Explore", link: "/explore"},
+        {id: 4, name: "Contacts", link: "/contacts"},
+        {id: 5, name: "About", link: "/about"},
+        {id: 6, name: role === "admin" || role === "owner" ? "Admin Console" : "Be a partner", link: role === "admin" || role === "owner" ? "/admin-page" : null},
+        {id: 7, name: "Report issue", link: null},
+        {id: 8, name: "Delete Account", link: null},
+        {id: 9, name: "Exit", link: null}
+    ]);
+    const [isMobile, setIsMobile] = useState(false);
+    const navigate = useNavigate();
 
     const topBarVariant = {
         rest : {
@@ -55,22 +78,111 @@ const Header = ({ isScrolled, isMobile, isSelected, setIsSelected }) => {
         }
     }
 
+    const handleSettingsItem = (id) => {
+
+        if(userID.length <= 0) return;
+    
+        if(id === 6 && role !== "admin" && role !== "owner") {
+        
+            setActivityName("be an admin");
+        
+            setIsBlockUser(true);
+
+            return;
+
+        }
+
+        if(id === 7){
+        
+            set_navigateTo_userID("");
+            set_navigateTo_userUsername("");
+            setReportType("");
+            setReportOnThisId("");
+            setIsReport(true);
+
+            return;
+        }
+        
+        if(id === 8) return setIsDeleteAccount(true);
+
+        if(id === 9) return logOut();
+    
+    };
+
+    const logOut = async() => {
+
+        try{
+    
+          const res = await logout();
+    
+          if(!res || !res?.ok || res.ok !== true){
+            console.log(res.dt);
+            return;
+          }
+    
+          setUserID(""); 
+          setUserUsername("");
+          setProfileImageName("");
+          set_navigateTo_userID("");
+          set_navigateTo_userUsername("");
+          navigate('/sign');
+    
+        } catch(err){
+          console.log(err.message);
+        }
+    
+    };
+
+    const navigateToProfile = async() => {
+        
+            setIsMyProfile(true);
+            set_navigateTo_userID("");
+            setIsSelected("Profile");
+            navigate(`/profile/${userID}`);
+
+    };
+
+    const headerButtonNavigation = (x) => {
+        setIsSelected(x); 
+        handleScroll();
+        navigate(`/${x === "Home" ? "" : x.toLowerCase()}`);
+    }
+
+    useEffect(() => {
+        const settingMobile = () => {
+            if(window.innerWidth > 960){
+                setIsMobile(false);
+            } else {
+                setIsMobile(true);
+            }
+        };
+
+        settingMobile();
+
+        window.addEventListener("resize", settingMobile);
+
+        return () => window.removeEventListener("resize", settingMobile);
+    }, []);
+
     useEffect(() => {
         if(isMenuBarClicked)
             setIsMneuBarClicked(false);
     }, [isMobile])
 
     return (
-        <div className='HeaderContainer' style={{zIndex: isScrolled === true && isMobile === false ? 1 : null}}>
+        <div className='HeaderContainer' style={{
+            zIndex: isScrolled === true && isMobile === false ? 0 : null
+        }}>
 
             <motion.div className='Header'
                 initial={{
                     color: "#fff",
-                    y: 0
+                    y: 0,
+                    background: null
                 }}
                 animate={{
                     color: isScrolled ? "#00000000" : "#fff",
-                    y: isScrolled ? -100 : 0
+                    background: isScrolled && isMobile ? "#208af5" : "transparent"
                 }}
             >
 
@@ -83,10 +195,10 @@ const Header = ({ isScrolled, isMobile, isSelected, setIsSelected }) => {
 
                     {isMobile === false ? (
                         <>
-                            <ul className='headerButtons'>
-                                <LiButton key={1} name={"Home"} isScrolled={"exist"}/>
-                                <LiButton key={2} name={"Explore"} isScrolled={"exist"}/>
-                                <LiButton key={3} name={"About"} isScrolled={"exist"}/>
+                            {!isScrolled && <><ul className='headerButtons'>
+                                <LiButton key={1} name={"Home"} isScrolled={"exist"} onClickHandler={() => headerButtonNavigation("Home")}/>
+                                <LiButton key={2} name={"Explore"} isScrolled={"exist"} onClickHandler={() => headerButtonNavigation("Explore")}/>
+                                <LiButton key={3} name={"About"} isScrolled={"exist"} onClickHandler={() => headerButtonNavigation("About")}/>
                             </ul> 
                             
                             <motion.div className='profile' 
@@ -94,21 +206,26 @@ const Header = ({ isScrolled, isMobile, isSelected, setIsSelected }) => {
                                     color: "#fff"
                                 }}
                                 animate={{
-                                    color: isScrolled ? "#00000000" : "#fff"
+                                    color: isScrolled ? "orange" : "#fff"
+                                }}
+                                style={{
+                                    padding: userID.length > 0 ? 0 : null, 
+                                    border: userID.length > 0 ? "none" : null, 
                                 }}
                             >
-                                <Link to="/sign" style={{color: "inherit"}}><button>Sign Up</button></Link>
-                                <Svgs type={"Profile"}/>
+                                {userID.length <= 0 ? <Link to="/sign" style={{color: "inherit"}} onClick={handleScroll}>
+                                    <button>Sign Up</button>
+                                    <Svgs type={"Profile"}/>
+                                </Link> : <Link to={`/profile/${userID}`} onClick={handleScroll}><img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${profileImageName}`} style={{width: "32px", height: "32px", borderRadius: "50%", objectFit: "cover"}}/></Link>}
                             </motion.div>
+                            </>}
                         </>
                         ) : (
                             <>
                                 <motion.div className='menuBar' 
                                 initial="rest" 
                                 onClick={() => {setIsMneuBarClicked(!isMenuBarClicked)}}
-                                animate={{
-                                    y: isScrolled ? 96 : 0
-                                }}
+                                
                                 >
                                     <motion.span variants={topBarVariant} animate={isMenuBarClicked ? "anim" : "rest"} />
                                     <motion.span variants={midBarVariant} animate={isMenuBarClicked ? "anim" : "rest"} style={{background: "white"}} />
@@ -132,52 +249,43 @@ const Header = ({ isScrolled, isMobile, isSelected, setIsSelected }) => {
                     }
                 }}
             >
-                <ul>
+                <div className='sideNavDiv'>
 
-                    <li key={1}>
-                        <div className='sideNavMobileProfile'>
-                            <img src={profileImage} className='profileImageSideNav'/>
-                            <h1>Mohammed</h1>   
-                        </div>
-                    </li>
+                    <ul className='sideButtonsUL'>
 
-                    <Button 
-                    key={2} 
-                    name={"Home"} 
-                    svg={"Home"} 
-                    bgColor={"transparent"} 
-                    size={"large"} 
-                    txtColor={"black"} 
-                    style={"text"}
-                    hoverStyle={"sideNavMobileHover"}
-                    isSelected={isSelected} 
-                    setIsSelected={setIsSelected} />
+                        <li key={0} style={{zIndex: 2}}>
+                            {userID.length > 0 ? <div className='sideNavMobileProfile'>
+                                <img onClick={navigateToProfile} src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${profileImageName}`} className='profileImageSideNav'/>
+                                <h1 onClick={navigateToProfile}>{userUsername}</h1>     
+                                <Svgs type={"Share"}
+                                on_click={() => setIsShareAccount(true)}/> 
+                            </div> : <div className='sideNavMobileSign'>
+                                <Link to="/sign" onClick={() => setIsSelected("")}><button>Sign Up</button></Link>
+                                <Svgs type={"Profile"}/>
+                            </div>}
+                        </li>
 
-                    <Button 
-                    key={3} 
-                    name={"Explore"} 
-                    svg={"Explore"} 
-                    bgColor={"transparent"} 
-                    size={"large"} 
-                    txtColor={"black"} 
-                    style={"text"}
-                    hoverStyle={"sideNavMobileHover"}
-                    isSelected={isSelected} 
-                    setIsSelected={setIsSelected} />
+                        {sideButtons.map((item) => (
+                            <Button 
+                            link={item.link}
+                            key={item.id}
+                            name={item.name}
+                            handleClick={() => handleSettingsItem(item.id)}
+                            bgColor={"white"} 
+                            size={"large"} 
+                            txtColor={"black"} 
+                            style={"text"}
+                            hoverStyle={"sideNavMobileHover"}
+                            setIsSelected={setIsSelected}
+                            isSelected={isSelected}
+                            />
+                        ))}
 
-                    <Button 
-                    key={4} 
-                    name={"About"} 
-                    svg={"Search"} 
-                    bgColor={"transparent"} 
-                    size={"large"} 
-                    txtColor={"black"} 
-                    style={"text"}
-                    hoverStyle={"sideNavMobileHover"}
-                    isSelected={isSelected} 
-                    setIsSelected={setIsSelected} />
 
-                </ul>
+
+                    </ul>
+                    
+                </div>
             </motion.div>
 
         </div>

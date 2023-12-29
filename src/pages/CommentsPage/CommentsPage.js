@@ -24,7 +24,7 @@ const CommentsPage = () => {
 
       if(res.dt){
         const fetchedComments = setPostInfoOnComments(res.dt.comments, res.dt.posts)
-        console.log(res);
+        console.log("Comments Page fetched data: ", fetchedComments);
         setComments(fetchedComments);
         setCount(count + 1);
       }
@@ -35,12 +35,13 @@ const CommentsPage = () => {
 
   useEffect(() => {
     setRunOnce(true);
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if(runOnce === true)
+    if(runOnce === true){
       fetchLatestCommentsOnMyPosts();
-  }, [runOnce])
+    }
+  }, [runOnce]);
 
   return (
     <div className='CommentsPage'>
@@ -52,11 +53,11 @@ const CommentsPage = () => {
                     key={cm._id} 
                     id={cm._id}
                     post_id={cm.post_id}
-                    post_image={image} //cm.post_first_image
+                    post_image={cm.post_first_image}
                     desc={cm.post_title} 
                     date_of_publish={cm.post_created_at} 
                     comment_creator={cm.commenter_name} 
-                    comment_image={image} //cm.commenter_image
+                    commenter_image={cm.commentorImage}
                     comment={cm.comment_text}
                 />
             ))}

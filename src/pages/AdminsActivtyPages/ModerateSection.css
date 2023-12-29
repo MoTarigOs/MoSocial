@@ -1,0 +1,133 @@
+.ModerateSectionContainer{
+    width: 100%;
+    height: 100vh;
+
+    .returnDiv{
+        width: 54px;
+        height: 54px;
+        cursor: pointer;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        margin-bottom: 16px;
+        margin-right: 16px;
+        background: white;
+        box-shadow: 1px 2px 16px #d0d0d0;
+        border-radius: 50%;
+        z-index: 5;
+        transition: all 0.1s ease-in;
+
+        & svg{
+            width: 100%;
+            height: 100%;
+            padding: 12px;
+        }
+    }
+
+    .returnDiv:hover{
+        box-shadow: 1px 2px 16px #9f9f9f;
+        transition: all 0.1s ease-in;
+    }
+
+    .ModerateSection{
+        width: 100%;
+        height: 100%;
+        overflow-y: auto;
+
+        & ul{
+            width: 100%;
+            max-width: 700px;
+            height: fit-content;
+            display: flex;
+            flex-direction: column;
+            padding: 8px;
+            margin-bottom: 48px;
+
+            .moderateItem{
+                width: 100%;
+                height: fit-content;
+                padding: 16px;
+                background: white;
+                border-radius: 12px;
+                box-shadow: 0px 4px 10px rgb(166, 166, 166);
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+
+                .ModerateHeader{
+                    height: fit-content;
+                    width: 100%;
+                    display: flex;
+                    justify-content: space-between;
+                    margin-top: -6px;
+
+                    & h2{
+                        cursor: pointer;
+
+                        &:hover{
+                            color: rgb(108, 108, 108);
+                        }
+
+                        &:active{
+                            color: rgb(63, 63, 63);
+                        }
+                    }
+
+                    & label{
+                        font-size: 1.08rem;
+                        font-weight: 600;
+                        color: rgb(153, 153, 153);
+                    }
+                }
+
+                & .acceptButton{
+                    margin-top: 12px;
+                    width: 100%;
+                    padding: 16px;
+                    background: rgb(0, 200, 0);
+                    color: white;
+                    font-size: 1.45rem;
+                    font-weight: 600;
+                    border-radius: 12px;
+                    cursor: pointer;
+                }
+
+                & acceptButton:hover{
+                    background: rgb(0, 234, 0);
+                }
+
+                & acceptButton:active{
+                    background: rgb(0, 189, 0);
+                }
+            }
+
+            .noObj{
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding: 24px;
+                gap: 24px;
+
+                & p{
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: grey;
+                }
+
+                & button{
+                    background: orange;
+                    color: white;
+                    padding: 12px;
+                    border-radius: 6px;
+                    cursor: pointer;
+                }
+            }
+        }
+
+        &::-webkit-scrollbar{
+            display: none;
+        }
+    }
+}

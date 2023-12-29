@@ -6,6 +6,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { DataProvidor } from './DataContext';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
 root.render(
   <React.StrictMode>
     <BrowserRouter>

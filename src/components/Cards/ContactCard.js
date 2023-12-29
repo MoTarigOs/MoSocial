@@ -10,7 +10,7 @@ const ContactCard = ({
 }) => {
 
     const [deleteAlert, setDeleteAlert] = useState(false);
-    const { setUserID, set_navigateTo_userUsername, set_navigateTo_userID } = useContext(DataContext);
+    const { setUserID, set_navigateTo_userUsername, set_navigateTo_userID, set_navigateTo_userProfilePic } = useContext(DataContext);
 
     return (
       <li className='ContactCardLi' onClick={() => {
@@ -19,6 +19,9 @@ const ContactCard = ({
         set_navigateTo_userID(contact_id);
         set_navigateTo_userUsername(username);
         updateSeenMessages(id);
+        set_navigateTo_userProfilePic(pic);
+
+        console.log("Contact page userPic name: ", pic);
       }}>
 
           <div className='deleteContact' onMouseLeave={() => setDeleteAlert(false)}>
@@ -30,7 +33,7 @@ const ContactCard = ({
                   </div>}
           </div>
 
-          <img src={img}/>
+          <img src={(pic && pic.length > 0) ? `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pic}` : null}/>
 
           <div>
               <h2>{username}</h2>

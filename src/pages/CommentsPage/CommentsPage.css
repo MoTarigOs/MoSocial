@@ -22,6 +22,8 @@
 
 @media screen and (max-width: 680px){
     .CommentsPage ul{
-        padding: 0 8px;
+        padding: 12px;
+        gap: 12px;
+        margin-bottom: 64px;
     }
 }

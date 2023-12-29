@@ -7,7 +7,7 @@ import HeroPostCard from '../../components/Cards/HeroPostCard';
 import Comments from '../../components/Comments/Comments';
 import LoadingGIF from '../../Assets/icons/loading_anim.gif';
 
-const SinglePostPage = () => {
+const SinglePostPage = ({ setIsReport }) => {
 
     const [postDetails, setPostDetails] = useState({});
     const [runOnce, setRunOnce] = useState(false);
@@ -62,7 +62,7 @@ const SinglePostPage = () => {
     return (
       <div className='SinglePostPage'>
 
-        <Comments isComments={isComments} setIsComments={setIsComments} />
+        <Comments isComments={isComments} setIsComments={setIsComments} setIsReport={setIsReport}/>
        
         {isLoading === false && <HeroPostCard 
             key={postDetails._id}
@@ -77,6 +77,7 @@ const SinglePostPage = () => {
             topCommentCreatorName={"udhfuidshf"}
             topComment={"skjdgfh8ewy7gfsdf78dsfbshjdgfhsdgfywsehfjgsdjhfgsdhjfgjshdghsfg"}
             setIsComments={setIsComments}
+            setIsReport={setIsReport}
         />}
 
         {isLoading !== false && <img src={LoadingGIF}/>}
