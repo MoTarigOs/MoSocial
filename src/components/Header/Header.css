@@ -58,6 +58,7 @@
 .HeaderContainer .Header .Logo img{
     width: 20px;
     height: 20px;
+    scale: 1.3;
     object-fit: cover;
 }
 
