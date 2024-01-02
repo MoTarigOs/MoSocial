@@ -56,8 +56,8 @@ const LandingPage = ({ isSelected, setIsSelected, handleScroll }) => {
                 </p>
 
                 <div className='home_buttons'>
-                    <Button name={"Explore"} style={"filled"} size={"large"} hoverStyle={"bgChangeOrange"} bgColor={"orange"} txtColor={"white"} handleClick={navigateToHero} isSelected={isSelected} setIsSelected={setIsSelected} link={"/"} />
-                    <Button name={"Create Post"} btnIcon={CreateIcon} style={"outlined"} size={"large"} hoverStyle={"outlineHover"} txtColor={"white"} handleClick={navigateToCreatePost} isSelected={isSelected} setIsSelected={setIsSelected} link={`/profile/${userID}`}/>
+                    <Button name={"Home page"} style={"filled"} size={"large"} hoverStyle={"bgChangeOrange"} bgColor={"orange"} txtColor={"white"} handleClick={navigateToHero} isSelected={isSelected} setIsSelected={setIsSelected} link={"/"} />
+                    <Button name={"Create Post"} btnIcon={CreateIcon} style={"outlined"} size={"large"} hoverStyle={"outlineHover"} txtColor={"white"} handleClick={navigateToCreatePost} isSelected={isSelected} setIsSelected={setIsSelected} link={`/profile/${userID ? userID : 0}`}/>
                 </div>
                 </div>  
 

@@ -1,6 +1,6 @@
 import axios from 'axios';
 axios.defaults.withCredentials = true;
-const base_url = "http://localhost:3500";
+const base_url = process.env.REACT_APP_REGISTER_URL;
 const config = null;
 
 
