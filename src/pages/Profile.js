@@ -490,7 +490,13 @@ const Profile = ({
         fetchMyProfileData();
         setOtherProfilePicName("");
       } else{
-        fetchProfileData();
+        if(userID !== params.id){
+          fetchProfileData();
+        } else {
+          fetchMyProfileData();
+          setOtherProfilePicName("");
+          setIsMyProfile(true);
+        }
       }
 
     };
