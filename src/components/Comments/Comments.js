@@ -29,9 +29,6 @@ const Comments = ({ isComments, setIsComments, setIsReport }) => {
     const [runOnce, setRunOnce] = useState(false);
     const [error, setError] = useState("");
     const [publishingComment, setPublishingComment] = useState(false);
-    const [isCommentLiked, setIsCommentLiked] = useState(false);
-    const [isCommentDisLiked, setIsCommentDisLiked] = useState(false);
-    const [runNavigation, setRunNavigation] = useState(false);
     const [limit, setLimit] = useState(12);
     const limitGap = 8;
     const navigate = useNavigate();
@@ -252,15 +249,11 @@ const Comments = ({ isComments, setIsComments, setIsReport }) => {
         if(id === userID){
             set_navigateTo_userID("");
             setIsMyProfile(true);
-            setTimeout(() => {
-                setRunNavigation(true);
-            }, 10);
+            navigate(`/profile/${id}`);
         } else {
             set_navigateTo_userID(id);
             setIsMyProfile(false);
-            setTimeout(() => {
-                setRunNavigation(true);
-            }, 10);
+            navigate(`/profile/${id}`);
         }
     };
 
@@ -302,13 +295,6 @@ const Comments = ({ isComments, setIsComments, setIsReport }) => {
         }
 
     }, [isComments]);
-
-    useEffect(() => {
-        if(runNavigation === true){
-            setRunNavigation(false);
-            navigate(`/profile/${navigateTo_userID}`);
-        }
-    }, [runNavigation]);
 
     return (
         <motion.div className='CommentsContainer'

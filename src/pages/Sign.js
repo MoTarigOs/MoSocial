@@ -31,7 +31,7 @@ const Sign = () => {
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const { 
     setUserID, setUserUsername, setProfileImageName, 
-    setIsMyProfile, setIsTestAccount } = useContext(DataContext);
+    setIsMyProfile, setIsTestAccount, setContacts, setRole } = useContext(DataContext);
   const reCaptchaRef = useRef(null);
   const reCaptchaRefLogin = useRef(null);
   const navigate = useNavigate();
@@ -42,6 +42,11 @@ const Sign = () => {
   const handleSubmitRegister = async(e) => {
         
       e.preventDefault();
+
+      setError("");
+      setUsernameError("");
+      setEmailError("");
+      setPasswordError("");
 
       const reCaptchaToken = reCaptchaRef?.current?.getValue() ? reCaptchaRef.current.getValue() : null;
       console.log("Captcha token: ", reCaptchaToken);
@@ -64,7 +69,7 @@ const Sign = () => {
       }
 
       if(!isValidPassword(password, confirmPassword)){
-        setPasswordError("not valid password");
+        setPasswordError("password must be between 8 - 30 chars, Use both lowercase and uppercase letters, Include at least one number, Include at least one special character(@$-!_*&%?.#+/)");
         return;
       }
 
@@ -144,6 +149,7 @@ const Sign = () => {
         setUserID(userInfoRes.dt.user_id ? userInfoRes.dt.user_id : "");
         setUserUsername(userInfoRes.dt.user_username ? userInfoRes.dt.user_username : "");
         setProfileImageName(userInfoRes.dt.profile_image ? userInfoRes.dt.profile_image : "");
+        setRole(userInfoRes.dt.role ? userInfoRes.dt.role : "user");
 
         setIsMyProfile(true);
 
@@ -153,6 +159,7 @@ const Sign = () => {
           setIsTestAccount(false);
         }
 
+        setContacts([]);
         navigate(`/profile/${userInfoRes.dt.user_id ? userInfoRes.dt.user_id : ""}`);
 
         return;

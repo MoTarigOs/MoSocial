@@ -204,7 +204,7 @@ const Report = ({ isReport, setIsReport }) => {
 
                 </div>) : (
                     <div className='Reported'>
-                        <p>Thank you for the report, we will handle it as soon as possible :l</p>
+                        <p>Thank you for the report, we will handle it as soon as possible.</p>
                         <button onClick={cancel}>Exit</button>
                     </div>
                 )}

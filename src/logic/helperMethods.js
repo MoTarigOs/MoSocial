@@ -21,7 +21,8 @@ export const isValidEmail = (email) => {
 
 export const isValidPassword = (password, confirmPassword) => {
 
-    if(!password || !confirmPassword || password !== confirmPassword || password === "")
+    if(!password || !confirmPassword || password !== confirmPassword 
+      || password === "" || password.length < 8 || password.length > 30)
         return false;
 
     if(checkPasswordStrength(password).ok === false)
