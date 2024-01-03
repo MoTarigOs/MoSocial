@@ -374,8 +374,9 @@ const Profile = ({
   };
 
   const navigateToChat = () => {
-      setIsChat(!isChat);
+      setIsChat(true);
       set_navigateTo_userProfilePic(otherProfilePicName);
+      set_navigateTo_userUsername(username);
       set_navigateTo_userID(hisId);
   };
 
@@ -492,6 +493,7 @@ const Profile = ({
       } else{
         if(userID !== params.id){
           fetchProfileData();
+          setIsMyProfile(false);
         } else {
           fetchMyProfileData();
           setOtherProfilePicName("");
@@ -550,7 +552,7 @@ const Profile = ({
             <div className='ProfilePageContentContainer'>
               <div className='ProfielPageContent'>
 
-                <p>{fetchResult}</p>
+                {fetchResult.length > 0 && <p>{fetchResult}</p>}
 
                 <div className='ProfileInfo'>
 

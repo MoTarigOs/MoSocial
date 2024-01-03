@@ -25,7 +25,7 @@ import profilePNG from '../../Assets/icons/profile-circle-svgrepo-com.svg';
     setIsMyProfile, contacts, setContacts, userID, 
     setUserID, userUsername, setUserUsername, profileImageName,
     set_navigateTo_userID, set_navigateTo_userUsername, setReportType,
-    setReportOnThisId, role,
+    setReportOnThisId, role, setRole,
     setIsBlockUser, setActivityName
   } = useContext(DataContext);
   const [settingsItemsArray, setSettingsItemsArray] = useState([
@@ -49,6 +49,8 @@ import profilePNG from '../../Assets/icons/profile-circle-svgrepo-com.svg';
       setFetchResult(res.dt);
       setUserID(""); 
       setUserUsername("");
+      setRole("");
+      navigate("/sign");
 
     } catch(err){
       setFetchResult(err.message);

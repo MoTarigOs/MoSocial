@@ -42,6 +42,8 @@
     & .ChatHeader{
         width: 100%;
         display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
         justify-content: space-between;
         align-items: center;
         background: rgb(255, 255, 255);
@@ -123,10 +125,10 @@
             height: fit-content;
             display: flex;
             flex-direction: column;
-            gap: 16px;
     
             & li{
                 width: 100%;
+                margin-bottom: 16px;
 
                 & label{
                     width: 100%;
@@ -268,9 +270,4 @@
         }
     }
 
-}
-
-@media screen and (max-width: 960px){
-    .ChatContainer{
-    }
 }

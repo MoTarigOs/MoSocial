@@ -5,7 +5,6 @@ import { createComment, getComments, deleteComment, getUserInfo } from '../../lo
 import './Comments.css';
 import { motion } from 'framer-motion';
 import Svgs from '../../Assets/icons/Svgs';
-import image from '../../Assets/images/idea_image.jpg';
 import likeIcon from '../../Assets/icons/like_icon.png';
 import likedIcon from '../../Assets/icons/liked_icon.png';
 import { getBadWords } from '../../logic/helperMethods';

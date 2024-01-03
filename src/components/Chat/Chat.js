@@ -21,10 +21,10 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
     const [isAddedContact, setIsAddedContact] = useState(null);
     const [delay, setDelay] = useState(null);
     const { 
-        userID, userUsername, navigateTo_userID, 
+        userID, navigateTo_userID, 
         navigateTo_userUsername, contacts, setContacts, 
         setIsMyProfile, navigateTo_userProfilePic,
-        set_navigateTo_userUsername, setReportOnThisId, setReportType
+        setReportOnThisId, setReportType
     } = useContext(DataContext);
     const navigate = useNavigate();
 
