@@ -27,8 +27,11 @@
             height: fit-content;
             display: flex;
             flex-direction: column;
-            gap: 16px;
             padding: 32px 0;
+
+            & li{
+                margin-top: 16px;
+            }
         }
     }
 

@@ -152,6 +152,8 @@
                     & div{
                         width: 100%;
                         display: flex;
+                        flex-direction: row;
+                        flex-wrap: nowrap;
                         justify-content: space-between;
                         align-items: center;
                         margin-bottom: 4px;
@@ -179,6 +181,20 @@
                                 }
                             }
                         }
+
+                        & h3{
+                            width: 100%;
+                        }
+
+                        & div{
+                            width: 64px;
+                            height: 64px;
+
+                            & svg {
+                                width: fit-content;
+                                height: fit-content;
+                            }
+                        }
                     }
                 }
     
@@ -194,6 +210,8 @@
                     & div{
                         width: 100%;
                         display: flex;
+                        flex-direction: row;
+                        flex-wrap: nowrap;
                         justify-content: space-between;
                         align-items: center;
                         gap: 16px;
@@ -222,6 +240,8 @@
         width: 100%;
         height: fit-content;
         display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
         align-items: center;
         justify-content: space-between;
         gap: 0px;
@@ -232,19 +252,28 @@
         border-bottom-left-radius: 24px;
         border-bottom-right-radius: 24px;
 
-        & svg{
+        & div { 
             width: 64px;
             height: 64px;
-            scale: 1.05;
             cursor: pointer;
+            margin: 0;
+            padding: 0;
+            
+            svg{
+                width: fit-content;
+                height: fit-content;
+                scale: 1.05;
+                margin: 0;
+                padding: 0;
 
-            & path{
-                fill: rgba(194, 194, 194, 0.682);
-            }
-
-            &:hover{
                 & path{
-                    fill: blue;
+                    fill: rgba(194, 194, 194, 0.682);
+                }
+
+                &:hover{
+                    & path{
+                        fill: blue;
+                    }
                 }
             }
         }
