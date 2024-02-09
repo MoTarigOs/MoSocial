@@ -39,7 +39,7 @@
         color: rgb(245, 245, 245);
     }
 
-    & .ChatHeader{
+    .ChatHeader{
         width: 100%;
         display: flex;
         flex-direction: row;
@@ -108,7 +108,7 @@
         }
     }
 
-    & .ulDiv{
+    .ulDiv{
         width: 100%;
         height: 100%;
         overflow-y: auto;
@@ -236,7 +236,7 @@
         }
     }
 
-    & .ChatSend{
+    .ChatSend{
         width: 100%;
         height: fit-content;
         display: flex;

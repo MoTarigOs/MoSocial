@@ -361,21 +361,27 @@
 .Sign .signPageLander .SignWith{
     width: 100%;
     max-width: 230px;
-    height: fit-content;
-    padding: 10px 24px;
-    border: 2px solid white;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: start;
-    gap: 12px;
     z-index: 1;
-    color: white;
-    cursor: pointer;
-    transition: all 0.3s ease-out;
-
-    & label{
+    border-radius: 50px;
+    border: 2px solid white;
+    
+    a{
+        width: 100%;
+        height: fit-content;
+        padding: 10px 24px;
+        display: flex;
+        align-items: center;
+        justify-content: start;
+        gap: 12px;
+        z-index: 1;
+        color: white;
         cursor: pointer;
+        transition: all 0.3s ease-out;
+
+        & label{
+            cursor: pointer;
+            color: white;
+        }
     }
 }
 
@@ -383,6 +389,10 @@
     background: white;
     color: black;
     transition: all 0.3s ease-in;
+
+    label{
+        color: black;
+    }
 }
 
 .Sign .signPageLander .changeSVGcolor:hover{
@@ -399,20 +409,21 @@
     display: none;
 
     .SignWithinside{
-        background: white;
         width: 100%;
-        padding: 16px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 12px;
-        border-radius: 12px;
-        box-shadow: 0 2px 12px rgb(158, 158, 158);
-        cursor: pointer;
-        transition: all 0.3s ease-out;
 
         & a{
             font-size: 1.1rem;
+            background: white;
+            width: 100%;
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgb(158, 158, 158);
+            cursor: pointer;
+            transition: all 0.3s ease-out;
 
             & label{
                 cursor: pointer;

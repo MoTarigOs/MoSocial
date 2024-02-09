@@ -425,8 +425,11 @@ const Sign = () => {
 
         <div className='signPageLanderInsider'>
           <div className='SignWithinside'>
-            <Svgs type={"Google"} />
-            <Link style={{color: 'inherit'}} to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}><label>Sign with Google</label></Link>
+            <Link style={{color: 'inherit'}} 
+            to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}>
+              <Svgs type={"Google"} />
+              <label>Sign with Google</label>
+            </Link>
           </div>
         </div>
 
@@ -511,8 +514,11 @@ const Sign = () => {
 
         <div className='signPageLanderInsider'>
           <div className='SignWithinside'>
-            <Svgs type={"Google"} />
-            <Link style={{color: 'inherit'}} to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}><label>Sign with Google</label></Link>
+            <Link style={{color: 'inherit'}} 
+            to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}>
+              <Svgs type={"Google"} />
+              <label>Sign with Google</label>
+            </Link>
           </div>
         </div>
 
@@ -521,8 +527,11 @@ const Sign = () => {
       
       <div className='signPageLander'>
         <div className='SignWith'>
-          <Svgs type={"Google"} />
-          <Link style={{color: 'inherit'}}to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}><label>Sign with Google</label></Link>
+          <Link style={{color: 'inherit'}}
+          to={`${process.env.REACT_APP_REGISTER_URL}/user/oauth/google`}>
+            <Svgs type={"Google"} />
+            <label>Sign with Google</label>
+          </Link>
         </div>
       </div>
       
