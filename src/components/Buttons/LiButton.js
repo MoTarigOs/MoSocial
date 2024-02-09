@@ -7,13 +7,13 @@ import { DataContext } from '../../DataContext';
 
 const LiButton = ({ 
     name, icon, notifications, 
-    setIsSelected, isSelected, isLoading, setIsSideBar,
+    setIsSelected, isSelected, isLoading,
     isScrolled, sideBar, myLink, onClickHandler
 }) => {
   
   return (
     <li className={isSelected === name ? "navBarSel" : ""} onClick={onClickHandler ? onClickHandler : null}>
-      <Link to={isLoading === false ? myLink : null} style={{textDecoration: "none", color: 'inherit', }} onClick={() => setIsSideBar(false)}>
+      <Link to={isLoading === false ? myLink : null} style={{textDecoration: "none", color: 'inherit', }}>
         <button className={`${icon ? "sideBarLiBtn" : ""}`} 
             style={{color: isScrolled ? "inherit" : null}}
             onClick={() => isLoading === false ? setIsSelected(name) : null}>
