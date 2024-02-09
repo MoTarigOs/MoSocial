@@ -401,7 +401,7 @@ const Comments = ({ isComments, setIsComments, setIsReport }) => {
                             
                 </div>
                 
-                <div className='commentSend'>
+                <div className='commentSend' style={{ display: 'flex' }}>
                     <textarea placeholder='Type here' ref={textToSendRef}></textarea>
                     <div onClick={publishComment}>
                         <Svgs type={"SendMessage"} />
