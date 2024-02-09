@@ -5,7 +5,7 @@ import Svgs from '../../Assets/icons/Svgs';
 
 const ShareAccount = ({ setIsShareAccount, isShareAccount }) => {
 
-    const base_url = "http://localhost:3000";
+    const base_url = process.env.REACT_APP_REGISTER_URL;
     const { userID } = useContext(DataContext);
     const [isCopied, setIsCopied] = useState(false);
     const myUrl = `${base_url}/profile/${userID}`;

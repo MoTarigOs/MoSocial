@@ -392,6 +392,7 @@ const Comments = ({ isComments, setIsComments, setIsReport }) => {
 
                     <div className='morePostsButton' 
                     style={{
+                        display: 'flex',
                         position: !isLoading && commentsArray.length > 0 ? "unset" : null, 
                         height: !isLoading && commentsArray.length > 0 ? "fit-content" : null, 
                         padding: !isLoading && commentsArray.length > 0 ? "24px 0" : null

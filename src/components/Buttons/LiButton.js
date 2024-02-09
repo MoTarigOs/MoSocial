@@ -1,18 +1,19 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import './LiButton.css';
 import { Link } from 'react-router-dom';
 
 import Svgs from '../../Assets/icons/Svgs';
+import { DataContext } from '../../DataContext';
 
 const LiButton = ({ 
     name, icon, notifications, 
-    setIsSelected, isSelected, isLoading,
+    setIsSelected, isSelected, isLoading, setIsSideBar,
     isScrolled, sideBar, myLink, onClickHandler
 }) => {
   
   return (
     <li className={isSelected === name ? "navBarSel" : ""} onClick={onClickHandler ? onClickHandler : null}>
-      <Link to={isLoading === false ? myLink : null} style={{textDecoration: "none", color: 'inherit', }}>
+      <Link to={isLoading === false ? myLink : null} style={{textDecoration: "none", color: 'inherit', }} onClick={() => setIsSideBar(false)}>
         <button className={`${icon ? "sideBarLiBtn" : ""}`} 
             style={{color: isScrolled ? "inherit" : null}}
             onClick={() => isLoading === false ? setIsSelected(name) : null}>

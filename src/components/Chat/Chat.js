@@ -236,7 +236,7 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
 
             <div className='Chat'>
 
-                <div className='ChatHeader'>
+                <div className='ChatHeader' style={{ display: 'flex' }}>
                     <img src={(navigateTo_userProfilePic && navigateTo_userProfilePic.length > 0) ? 
                     `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${navigateTo_userProfilePic}` : null} alt=''/>
                     <h3 onClick={() => navigateToProfile()} >{navigateTo_userUsername}</h3>
@@ -252,13 +252,13 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
 
                 <div className='ulDiv' ref={chatsListRef}>
 
-                    <ul >
+                    <ul>
                         {chats.map((c) => (
                             <li key={c._id}>
     
                                 {c.client === true ? (
                                     <div className='ChatClientDiv'>
-                                        <div>
+                                        <div style={{ display: 'flex' }}>
                                             <h3>You</h3>
                                             <div className='deleteChatText' onClick={() => deleteChat(c._id)}><Svgs type={"Delete2"} /></div>
                                         </div>
@@ -266,7 +266,7 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
                                     </div>
                                 ) : (
                                     <div className='ChatRecieverDiv'>
-                                        <div>
+                                        <div style={{ display: 'flex' }}>
                                             <h3>{c.sender_username}</h3>
                                             <button onClick={() => handleChatReport(c._id)} 
                                             >Report</button>
@@ -276,6 +276,7 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
                                 )}
 
                                 <label style={{
+                                    display: 'flex',
                                     justifyContent: c.client === true ? "start" : "end",
                                     marginLeft: c.client === true ? "4px" : null,
                                     marginRight: c.client === false ? "16px" : null
@@ -287,7 +288,7 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
 
                 </div>
                 
-                <div className='ChatSend'>
+                <div className='ChatSend' style={{ display: 'flex' }}>
                     <textarea placeholder='Type here' ref={textToSendRef}></textarea>
                     <div onClick={sendText}>
                         <Svgs type={"SendMessage"} />

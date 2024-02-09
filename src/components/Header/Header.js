@@ -80,6 +80,8 @@ const Header = ({
 
     const handleSettingsItem = (id) => {
 
+        setIsMneuBarClicked(false);
+
         if(userID.length <= 0) return;
     
         if(id === 6 && role !== "admin" && role !== "owner") {
