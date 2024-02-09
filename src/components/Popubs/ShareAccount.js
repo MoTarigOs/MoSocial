@@ -5,7 +5,7 @@ import Svgs from '../../Assets/icons/Svgs';
 
 const ShareAccount = ({ setIsShareAccount, isShareAccount }) => {
 
-    const base_url = process.env.REACT_APP_REGISTER_URL;
+    const base_url = 'https://dynamic-mousse-7027f8.netlify.app';
     const { userID } = useContext(DataContext);
     const [isCopied, setIsCopied] = useState(false);
     const myUrl = `${base_url}/profile/${userID}`;
