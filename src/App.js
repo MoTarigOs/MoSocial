@@ -23,6 +23,7 @@ import ImageFullScreen from './components/Popubs/ImageFullScreen';
 import About from './pages/About/About';
 import ShareAccount from './components/Popubs/ShareAccount';
 import Svgs from './Assets/icons/Svgs';
+import ConnectingToServer from './components/ConnectingToServer/ConnectingToServer';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
     const [isShareAccount, setIsShareAccount] = useState(false);
     const [isOnline, setIsOnline] = useState(false);
     const [runOnce, setRunOnce] = useState(false);
+    const [connected, setConnected] = useState(false);
     const contentRef = useRef();
     const wrapperContainerRef = useRef(null);
     const wrapperRef = useRef(null);
@@ -51,7 +53,7 @@ function App() {
         
       let res = await getUserInfo();
 
-      console.log("Get user info res: ", res);
+      if(res) setConnected(true);
 
       if(res && res.ok === true && res.dt && res.dt.user_id){
         setUserID(res.dt.user_id);
@@ -62,8 +64,6 @@ function App() {
       } 
 
       const refreshRes = await refreshTokens();
-
-      console.log("refreshed? app.js ", refreshRes?.ok ? refreshRes.ok : false);
 
       if(!refreshRes || refreshRes.ok !== true){
         setIsSelected("Sign"); 
@@ -161,7 +161,7 @@ function App() {
 
          <div className='Wrapper' ref={wrapperRef}>
 
-          {isOnline ? <><DeleteAccount setIsDeleteAccount={setIsDeleteAccount} isDeleteAccount={isDeleteAccount}/>
+          {isOnline && connected ? <><DeleteAccount setIsDeleteAccount={setIsDeleteAccount} isDeleteAccount={isDeleteAccount}/>
 
           <Report isReport={isReport} setIsReport={setIsReport}/>
 
@@ -209,10 +209,10 @@ function App() {
 
             </div>
 
-          </div></> : <div className='offline'>
+          </div></> : (!isOnline ? <div className='offline'>
             <Svgs type={"No internet"}/>
               <h3>No Internet Connection</h3>  
-          </div>}
+          </div> : <ConnectingToServer />)}
 
         </div>  
 

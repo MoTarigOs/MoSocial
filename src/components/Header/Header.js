@@ -255,7 +255,7 @@ const Header = ({
 
                     <ul className='sideButtonsUL'>
 
-                        <li key={0} style={{zIndex: 2}}>
+                        <li key={0} style={{zIndex: 2}} onClick={() => setIsMneuBarClicked(false)}>
                             {userID.length > 0 ? <div className='sideNavMobileProfile'>
                                 <img onClick={navigateToProfile} src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${profileImageName}`} className='profileImageSideNav'/>
                                 <h1 onClick={navigateToProfile}>{userUsername}</h1>     

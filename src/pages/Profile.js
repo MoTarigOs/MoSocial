@@ -597,7 +597,7 @@ const Profile = ({
 
                     <h3>Last Posts</h3>
                     <div className='lastProjectsDiv'>
-                      <ul className='lastProjects'>
+                      <ul className='lastProjects' style={{ display: 'flex' }}>
                           {myLastProjects.map((pj) => (
                             <li key={pj.key_id} onClick={() => navigateToPost(pj.key_id)}>
                               <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
@@ -884,7 +884,7 @@ const Profile = ({
 
                     <h3>Last Posts</h3>
                     <div className='lastProjectsDiv'>
-                      <ul className='lastProjects'>
+                      <ul className='lastProjects' style={{ display: 'flex' }}>
                           {myLastProjects.map((pj) => (
                             <li key={pj.key_id} onClick={() => navigateToPost(pj.key_id)}>
                               <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
@@ -925,7 +925,7 @@ const Profile = ({
 
                     <h3>Last Projects</h3>
                     <div className='lastProjectsDiv'>
-                      <ul className='lastProjects'>
+                      <ul className='lastProjects' style={{ display: 'flex' }}>
                           {myLastProjects.map((pj) => (
                             <li key={pj.key_id}>
                               <img src={`https://f003.backblazeb2.com/file/mosocial-all-images-storage/${pj.image}`} alt=''/>
