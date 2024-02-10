@@ -158,22 +158,19 @@ const Profile = ({
       if(optimisedImage?.size > 300000)
         optimisedImage = await handleImage(choosenImage, 0.3);
 
-      console.log("image file: ", optimisedImage);
+      optimisedImage.name = optimisedImage.name.replaceAll(' ', '_');
 
       if(!optimisedImage) return setSubmitError("Error please try again or use different picture");
 
       uploadPicture(optimisedImage, res)
         .then((ress) => {
-          console.log("uploadPic response: ", ress);
         }, (ress) => {
-          console.log("uploadPic response: ", ress);
           handleFailedUpload();
         });
 
       return setSubmitError(null);
 
     } catch(err){
-      console.log("error submitting profile", err.message);
       setSubmitError(err.message);
     }
 
@@ -231,10 +228,6 @@ const Profile = ({
     }
   }, [choosenImage]);
 
-  useEffect(() => {
-    console.log(isComments)
-  },[isComments]);
-
   const calculateID = () => {
     let ids = [];
 
@@ -271,8 +264,6 @@ const Profile = ({
       setFetchLoading(false);
 
       const postsRes = await getPostsForThisUser(true);
-
-      console.log(postsRes);
 
     } catch(err){
       console.log(err.message);

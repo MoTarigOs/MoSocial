@@ -181,7 +181,7 @@ function App() {
 
             <div className='loading_routes'>
 
-              <Chat isChat={isChat} setIsChat={setIsChat} setIsSelected={setIsSelected} isSelected={isSelected} setIsReport={setIsReport}/>
+              <Chat isChat={isChat} setIsChat={setIsChat} setIsSelected={setIsSelected} isMobile={isMobile} isSelected={isSelected} setIsReport={setIsReport}/>
 
               {isLoading === true && <Loading isLoading={isLoading}/> }
 

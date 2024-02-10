@@ -125,6 +125,7 @@ const CreatePostCard = ({ username }) => {
             pic = await handleImage(pic, 0.50);
             if(pic.size > 550000) return null
         };
+        pic.name = pic.name.replaceAll(' ', '_');
         return pic;
     };
 

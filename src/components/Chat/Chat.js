@@ -9,7 +9,7 @@ import Svgs from '../../Assets/icons/Svgs';
 import image from '../../Assets/images/idea_image.jpg';
 import useInterval from '../../logic/CustomHooks/useInterval';
 
-const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => {
+const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport, isMobile }) => {
 
     const textToSendRef = useRef();
     const chatsListRef = useRef();
@@ -241,7 +241,7 @@ const Chat = ({ isChat, setIsChat, setIsSelected, isSelected, setIsReport }) => 
                     `https://f003.backblazeb2.com/file/mosocial-all-images-storage/${navigateTo_userProfilePic}` : null} alt=''/>
                     <h3 onClick={() => navigateToProfile()} >{navigateTo_userUsername}</h3>
                     {isAddedContact === false && <div className='addContactDiv' onClick={() => createNewContact()}>
-                        Add Contact <Svgs type={"addContact"}/>
+                        {!isMobile && 'Add Contact'} <Svgs type={"addContact"}/>
                     </div>}
                     <div className='QuitChatting' onClick={() => setIsChat(false)}>
                         <Svgs type={"Exit"}/>
